@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>O.FRE.SER — Gestión Integral de Plagas | Mockup V3</title>
+  <meta name="description" content="Mockup conceptual de O.FRE.SER para minería, industrias, comercios y hogares en Salta y el NOA.">
+  <!-- Este prototipo es sólo de demostración. No debe indexarse. -->
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    /* ================================================================
+       O.FRE.SER — REDISEÑO WEB V3
+       Objetivo visual: profesional, sobrio, cercano y técnico.
+       Se reduce la escala tipográfica de V2 y se priorizan fondos claros,
+       jerarquías más serenas y bloques audiovisuales reales a incorporar.
+       ================================================================ */
+    :root{
+      --blue:#1738b0;
+      --blue-2:#0e2a7b;
+      --navy:#0b1d3a;
+      --green:#2f9d69;
+      --green-soft:#eef8f2;
+      --ink:#17243a;
+      --muted:#687386;
+      --line:#e2e7ee;
+      --soft:#f7f9fc;
+      --white:#ffffff;
+      --max:1180px;
+      --radius:18px;
+      --shadow:0 14px 34px rgba(18,39,76,.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#fff;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;line-height:1.58;font-size:16px}
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    .shell{width:min(var(--max),calc(100% - 36px));margin:auto}
+    .section{padding:78px 0}
+    .soft{background:var(--soft)}
+    .eyebrow{display:flex;align-items:center;gap:9px;color:var(--blue);font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+    .eyebrow:before{content:"";width:24px;height:2px;background:var(--green)}
+    h1,h2,h3{margin:0;color:var(--ink);letter-spacing:-.025em}
+    h1{font-size:clamp(2.7rem,5.2vw,4.3rem);line-height:1.06;font-weight:730}
+    h2{font-size:clamp(2rem,3.5vw,3rem);line-height:1.12;font-weight:720}
+    h3{font-size:1.18rem;line-height:1.25;font-weight:720}
+    p{margin:0;color:var(--muted)}
+    .lead{font-size:clamp(1rem,1.45vw,1.14rem);line-height:1.72}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:45px;padding:11px 17px;border-radius:10px;border:1px solid transparent;font-weight:760;font-size:.9rem;cursor:pointer;transition:.2s}
+    .btn:hover{transform:translateY(-1px)}
+    .primary{background:var(--blue);color:#fff}
+    .primary:hover{background:var(--blue-2)}
+    .outline{background:#fff;border-color:#cfd6e2;color:var(--ink)}
+    .light{background:#fff;color:var(--navy)}
+    .textlink{color:var(--blue);font-weight:760;font-size:.9rem}
+    .textlink:after{content:" →"}
+
+    /* Navegación compacta y más institucional. */
+    .topbar{background:var(--navy);color:#c9d3e3;font-size:.74rem}
+    .topbar .shell{min-height:31px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .topbar strong{color:#fff}
+    .nav{position:sticky;top:0;z-index:50;height:72px;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .nav .shell{height:100%;display:flex;align-items:center;gap:24px}
+    .brand{margin-right:auto;color:var(--blue);line-height:1;text-align:center}
+    .brand small{display:block;font-size:.44rem;letter-spacing:.16em;font-weight:900}
+    .brand strong{display:block;font-family:Georgia,serif;font-size:1.32rem;letter-spacing:.02em;margin:2px 0}
+    .brand span{display:block;font-size:.43rem;font-weight:800}
+    .links{display:flex;align-items:center;gap:20px;font-size:.86rem;font-weight:730}
+    .links a{padding:9px 0}
+    .links a:hover{color:var(--blue)}
+    .menu{display:none;border:0;background:none;font-size:1.5rem}
+    .mobile{display:none;position:fixed;top:72px;left:0;right:0;z-index:49;background:#fff;border-bottom:1px solid var(--line);box-shadow:var(--shadow);padding:18px 20px}
+    .mobile.open{display:grid;gap:5px}
+    .mobile a{padding:9px 4px;font-weight:720}
+
+    /* Hero: más blanco, menos grandilocuente, con foco técnico y minero. */
+    .hero{background:linear-gradient(180deg,#fbfcfe,#f5f8fd);border-bottom:1px solid var(--line);padding:70px 0 58px}
+    .hero-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:58px;align-items:center}
+    .hero h1{margin:16px 0 20px;max-width:650px}
+    .hero h1 em{font-style:normal;color:var(--blue)}
+    .hero-copy p{max-width:620px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
+    .mini-proof{display:flex;gap:24px;flex-wrap:wrap;margin-top:31px;padding-top:20px;border-top:1px solid var(--line)}
+    .mini-proof div{min-width:125px}
+    .mini-proof strong{display:block;font-size:.88rem;color:var(--ink)}
+    .mini-proof span{font-size:.74rem;color:var(--muted)}
+    .hero-media{height:500px;border-radius:22px;background:linear-gradient(145deg,#173b73,#0c274e);position:relative;overflow:hidden;box-shadow:var(--shadow)}
+    .hero-media:after{content:"VIDEO / FOTO PRINCIPAL\A OPERACIÓN MINERA · PUNA";white-space:pre;position:absolute;inset:30px;border:1px dashed rgba(255,255,255,.42);border-radius:14px;display:grid;place-items:center;text-align:center;color:#d4ddeb;font-size:.73rem;font-weight:800;letter-spacing:.1em}
+    .hero-badge{position:absolute;left:24px;bottom:24px;background:rgba(255,255,255,.95);border-radius:12px;padding:13px 15px;max-width:250px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+    .hero-badge strong{display:block;color:var(--ink);font-size:.88rem}
+    .hero-badge span{font-size:.74rem;color:var(--muted)}
+
+    /* Selector de públicos: rápido, limpio y sin exceso de tarjetas. */
+    .choice{padding:34px 0;background:#fff;border-bottom:1px solid var(--line)}
+    .choice-grid{display:grid;grid-template-columns:1.1fr repeat(4,1fr);align-items:stretch;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .choice-title{padding:21px 22px;background:var(--soft)}
+    .choice-title strong{display:block;font-size:.94rem}
+    .choice-title span{font-size:.76rem;color:var(--muted)}
+    .choice a{padding:20px 18px;border-left:1px solid var(--line);font-size:.86rem;font-weight:720;display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .choice a:hover{background:#f7faff;color:var(--blue)}
+
+    .section-head{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:end;margin-bottom:36px}
+    .section-head h2{margin-top:12px}
+    .section-head>p{max-width:450px;justify-self:end}
+
+    /* Minería: protagonista pero concentrada en un solo bloque contundente. */
+    .mining{display:grid;grid-template-columns:1.08fr .92fr;background:var(--navy);border-radius:22px;overflow:hidden;color:#fff;min-height:540px}
+    .mining-media{position:relative;background:linear-gradient(145deg,#1b4a78,#102e57)}
+    .mining-media:after{content:"FOTO / VIDEO REAL\A FLOTA · OPERARIOS · PUNA";white-space:pre;position:absolute;inset:28px;border:1px dashed rgba(255,255,255,.4);border-radius:14px;display:grid;place-items:center;text-align:center;color:#d1deee;font-size:.74rem;font-weight:800;letter-spacing:.1em}
+    .mining-copy{padding:52px 48px;display:flex;flex-direction:column;justify-content:center}
+    .mining .eyebrow{color:#aac2ff}
+    .mining h2{color:#fff;margin:13px 0 17px;font-size:clamp(2rem,3vw,2.75rem)}
+    .mining p{color:#bdc9da}
+    .mining-list{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:25px 0;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
+    .mining-list div{padding:14px 0;font-size:.84rem;font-weight:700;color:#e5ebf4}
+    .mining-list div:nth-child(even){padding-left:18px;border-left:1px solid rgba(255,255,255,.16)}
+
+    /* Sectores con peso visual equilibrado. */
+    .sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .sector{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+    .sector-media{height:190px;background:#edf1f6;display:grid;place-items:center;color:#7c8798;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-align:center;padding:20px}
+    .sector-copy{padding:22px}
+    .sector h3{margin-bottom:7px}
+    .sector p{font-size:.88rem;min-height:65px}
+    .sector .textlink{display:inline-block;margin-top:15px}
+
+    /* Método MIP sin números gigantes ni diseño agresivo. */
+    .process{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+    .step{padding:25px 23px;border-right:1px solid var(--line)}
+    .step:last-child{border-right:0}
+    .step b{display:block;color:var(--green);font-size:.72rem;letter-spacing:.12em;margin-bottom:22px}
+    .step h3{margin-bottom:8px;font-size:1.08rem}
+    .step p{font-size:.86rem}
+
+    /* Trazabilidad: bloque claro, técnico y creíble. */
+    .data{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+    .dashboard{height:410px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);display:grid;grid-template-columns:90px 1fr;gap:13px}
+    .dash-side{background:var(--navy);border-radius:12px}
+    .dash-main{display:grid;grid-template-rows:56px 1fr 95px;gap:12px}
+    .dash-box{background:var(--soft);border:1px solid var(--line);border-radius:11px}
+    .dash-chart{position:relative}
+    .dash-chart:after{content:"CAPTURA REAL iGeo / ODOO";position:absolute;inset:17px;border:1px dashed #aeb8c6;display:grid;place-items:center;color:#7d8898;font-size:.7rem;font-weight:800;letter-spacing:.09em}
+    .dash-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .data h2{margin:12px 0 17px}
+    .features{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:24px}
+    .feature{padding-top:10px;border-top:1px solid var(--line);font-size:.84rem;font-weight:700}
+    .feature span{color:var(--green);margin-right:6px}
+
+    /* Aprendé sobre plagas: accesible y amigable sin parecer infantil. */
+    .learn{background:var(--green-soft);border-top:1px solid #dcece2;border-bottom:1px solid #dcece2}
+    .learn-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:55px;align-items:center}
+    .learn h2{margin:12px 0 16px}
+    .search{display:flex;gap:8px;background:#fff;border:1px solid #dce5e0;border-radius:12px;padding:6px;margin-top:23px}
+    .search input{flex:1;min-width:0;border:0;outline:0;padding:9px 10px;background:transparent}
+    .pests{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .pest{min-height:118px;background:#fff;border:1px solid #dde7e1;border-radius:14px;padding:17px;display:flex;flex-direction:column;justify-content:space-between}
+    .pest:hover{border-color:#b9d9c7;box-shadow:0 8px 24px rgba(29,80,57,.06)}
+    .pest span{width:34px;height:34px;border-radius:50%;background:#e9f7ef;color:var(--green);display:grid;place-items:center;font-weight:800}
+    .pest strong{font-size:.9rem}
+    .pest small{font-size:.72rem;color:var(--muted)}
+
+    /* Certificaciones y enfoque ambiental. */
+    .certs{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center}
+    .certs h2{margin:12px 0 17px}
+    .cert-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+    .cert{border:1px solid var(--line);border-radius:14px;padding:20px;background:#fff}
+    .cert .mark{width:54px;height:54px;border-radius:11px;background:#eef2ff;color:var(--blue);display:grid;place-items:center;font-size:.76rem;font-weight:900;margin-bottom:15px}
+    .cert strong{display:block;font-size:.92rem}
+    .cert small{color:var(--muted);font-size:.74rem}
+    .env{height:390px;border-radius:18px;background:linear-gradient(145deg,#0f3471,#102653);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;padding:35px}
+    .env-ring{width:130px;height:130px;border-radius:50%;border:13px solid rgba(55,177,119,.84);box-shadow:inset 0 0 0 12px rgba(62,131,210,.55);margin-bottom:22px}
+    .env strong{font-size:1.05rem}
+    .env span{font-size:.78rem;color:#cbd6e6;margin-top:5px}
+
+    /* Posicionamiento local: visible y natural, no una sección SEO artificial. */
+    .local{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:center}
+    .local-map{height:330px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#f1f4f8,#fafbfd);display:grid;place-items:center;text-align:center;color:#7a8697;font-size:.72rem;font-weight:800;letter-spacing:.08em}
+    .local h2{margin:12px 0 17px}
+    .local-items{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:21px}
+    .local-items div{font-size:.84rem;font-weight:700;padding-top:9px;border-top:1px solid var(--line)}
+
+    .cta{background:#1538ae;border-radius:18px;color:#fff;padding:40px 42px;display:flex;justify-content:space-between;align-items:center;gap:35px}
+    .cta h2{color:#fff;font-size:clamp(1.8rem,3vw,2.5rem);max-width:720px}
+    .cta p{color:#dbe3f6;margin-top:8px}
+
+    .footer{background:var(--navy);color:#d0d9e7;margin-top:70px;padding:48px 0 24px}
+    .footer-grid{display:grid;grid-template-columns:1.15fr .8fr .8fr 1fr;gap:34px}
+    .footer h4{margin:0 0 12px;color:#fff;font-size:.86rem}
+    .footer a,.footer span{display:block;color:#9eacc0;font-size:.8rem;padding:3px 0}
+    .footer p{color:#9eacc0;font-size:.84rem;max-width:280px;margin-top:12px}
+    .footer-brand{font-family:Georgia,serif;font-size:1.45rem;color:#fff}
+    .bottom{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-top:15px;color:#72839b;font-size:.7rem;display:flex;justify-content:space-between;gap:20px}
+
+    /* Páginas internas del mockup. En producción serán URLs reales y SEO-friendly. */
+    .page{display:none}
+    .page.active{display:block}
+    .pagehero{padding:72px 0;background:#f7f9fc;border-bottom:1px solid var(--line)}
+    .pagehero-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:48px;align-items:center}
+    .pagehero h1{font-size:clamp(2.45rem,4.3vw,3.8rem);margin:14px 0 18px}
+    .pagevisual{height:320px;border-radius:18px;background:linear-gradient(145deg,#173f76,#0d294f);position:relative}
+    .pagevisual:after{content:attr(data-label);position:absolute;inset:24px;border:1px dashed rgba(255,255,255,.42);border-radius:12px;display:grid;place-items:center;text-align:center;color:#d3deec;font-size:.7rem;font-weight:800;letter-spacing:.09em;padding:20px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:21px}
+    .card h3{margin-bottom:7px}
+    .card p{font-size:.86rem}
+    .icon{width:36px;height:36px;border-radius:9px;background:#eef2ff;color:var(--blue);display:grid;place-items:center;font-size:.72rem;font-weight:900;margin-bottom:16px}
+    .twocol{display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:start}
+    .faq{border-top:1px solid var(--line)}
+    .faq div{padding:16px 0;border-bottom:1px solid var(--line)}
+    .faq strong{display:block;margin-bottom:5px;font-size:.9rem}
+    .faq p{font-size:.84rem}
+    .visual-light{height:360px;border-radius:18px;border:1px solid var(--line);background:var(--soft);display:grid;place-items:center;text-align:center;color:#7c8797;font-size:.72rem;font-weight:800;letter-spacing:.08em;padding:25px}
+    .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,70px);opacity:0;background:var(--navy);color:#fff;padding:11px 15px;border-radius:999px;font-size:.78rem;font-weight:700;transition:.22s;z-index:90}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+
+    @media(max-width:980px){
+      .links{display:none}.menu{display:block}.nav .primary{display:none}
+      .hero-grid,.mining,.data,.learn-grid,.certs,.local,.pagehero-grid,.twocol{grid-template-columns:1fr}
+      .hero-media{height:390px}.choice-grid{grid-template-columns:1fr 1fr}.choice-title{grid-column:1/-1}.choice a:nth-child(even){border-left:0}.section-head{grid-template-columns:1fr;gap:14px}.section-head>p{justify-self:start}.sectors,.cards{grid-template-columns:1fr 1fr}.process{grid-template-columns:1fr 1fr}.step:nth-child(2){border-right:0}.step:nth-child(-n+2){border-bottom:1px solid var(--line)}.footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:650px){
+      body{font-size:15px}.topbar{display:none}.nav{height:66px}.mobile{top:66px}.shell{width:calc(100% - 24px)}.section{padding:58px 0}.hero{padding:52px 0 42px}.hero h1{font-size:2.65rem}.hero-media{height:310px}.hero-badge{left:15px;right:15px;bottom:15px}.choice{padding:20px 0}.choice-grid{grid-template-columns:1fr}.choice-title{grid-column:auto}.choice a{border-left:0;border-top:1px solid var(--line)}.sectors,.cards,.process,.features,.cert-grid,.local-items{grid-template-columns:1fr}.step{border-right:0;border-bottom:1px solid var(--line)!important}.step:last-child{border-bottom:0!important}.mining-copy{padding:34px 25px}.mining-media{min-height:310px}.dashboard{height:330px;grid-template-columns:62px 1fr}.pests{grid-template-columns:1fr 1fr}.cta{display:block;padding:31px 24px}.cta .actions{margin-top:20px}.footer-grid{grid-template-columns:1fr}.bottom{display:block}.pagehero{padding:52px 0}.pagevisual{height:260px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="shell"><span><strong>O.FRE.SER</strong> · Gestión Integral de Plagas</span><span>Salta · NOA · Argentina &nbsp;|&nbsp; +54 9 387 528-6093</span></div></div>
+  <header class="nav"><div class="shell">
+    <a class="brand route" href="#inicio"><small>GRUPO MORÓN</small><strong>O.FRE.SER</strong><span>Gestión Integral de Plagas</span></a>
+    <nav class="links"><a class="route" href="#mineria">Minería</a><a class="route" href="#industria">Industria</a><a class="route" href="#hogares">Hogares y comercios</a><a class="route" href="#aprende">Aprendé sobre plagas</a><a class="route" href="#certificaciones">Certificaciones</a><a href="#contacto">Contacto</a></nav>
+    <a class="btn primary" href="#contacto">Solicitar propuesta</a><button class="menu" id="menu" aria-label="Abrir menú">☰</button>
+  </div></header>
+  <div class="mobile" id="mobile"><a class="route" href="#mineria">Minería</a><a class="route" href="#industria">Industria</a><a class="route" href="#hogares">Hogares y comercios</a><a class="route" href="#aprende">Aprendé sobre plagas</a><a class="route" href="#certificaciones">Certificaciones</a><a href="#contacto">Contacto</a></div>
+
+  <main>
+    <div class="page active" id="page-inicio">
+      <section class="hero"><div class="shell hero-grid">
+        <div class="hero-copy"><span class="eyebrow">Salta · NOA · soluciones profesionales</span><h1>Gestión integral de plagas con <em>respaldo técnico.</em></h1><p class="lead">Prevención, monitoreo, control y trazabilidad para minería, industrias, empresas, comercios y hogares. Diseñamos soluciones según el riesgo, el entorno y la actividad.</p><div class="actions"><a class="btn primary" href="#contacto">Solicitar visita técnica</a><a class="btn outline route" href="#mineria">Conocer Minería</a></div><div class="mini-proof"><div><strong>ISO 9001</strong><span>Gestión de la Calidad</span></div><div><strong>ISO 14001</strong><span>Gestión Ambiental</span></div><div><strong>MIP</strong><span>Prevención + monitoreo</span></div></div></div>
+        <div class="hero-media"><div class="hero-badge"><strong>Especialistas en operaciones mineras</strong><span>Capacidad operativa para Puna y entornos de alta exigencia.</span></div></div>
+      </div></section>
+
+      <section class="choice"><div class="shell"><div class="choice-grid"><div class="choice-title"><strong>¿Qué necesitás resolver?</strong><span>Elegí el contexto para ir directo a la información útil.</span></div><a class="route" href="#mineria">Operación minera <span>→</span></a><a class="route" href="#industria">Empresa o industria <span>→</span></a><a class="route" href="#hogares">Hogar o comercio <span>→</span></a><a class="route" href="#aprende">Identificar una plaga <span>→</span></a></div></div></section>
+
+      <section class="section"><div class="shell"><div class="section-head"><div><span class="eyebrow">Minería</span><h2>Capacidad operativa para contextos exigentes.</h2></div><p>La minería es uno de los principales focos de O.FRE.SER. El servicio combina planificación, prevención, monitoreo, documentación y seguimiento en campo.</p></div><div class="mining"><div class="mining-media"></div><div class="mining-copy"><span class="eyebrow">División Minería</span><h2>Gestión de plagas en Puna y operaciones remotas.</h2><p>Programas de Manejo Integrado de Plagas para campamentos, comedores, depósitos, oficinas, instalaciones operativas y perímetros.</p><div class="mining-list"><div>Campamentos y comedores</div><div>Depósitos y perímetros</div><div>Monitoreo y tendencias</div><div>Informes y trazabilidad</div><div>Personal capacitado</div><div>Gestión ambiental</div></div><a class="btn light route" href="#mineria">Explorar soluciones para minería</a></div></div></div></section>
+
+      <section class="section soft"><div class="shell"><div class="section-head"><div><span class="eyebrow">Soluciones por sector</span><h2>La misma exigencia técnica, adaptada a cada cliente.</h2></div><p>La web separa claramente los recorridos B2B de las consultas residenciales para que cada visitante encuentre una respuesta concreta.</p></div><div class="sectors"><article class="sector"><div class="sector-media">FOTO · INDUSTRIA / PLANTA / ALIMENTOS</div><div class="sector-copy"><h3>Industrias y empresas</h3><p>Prevención, monitoreo, documentación y control para procesos que requieren continuidad y trazabilidad.</p><a class="textlink route" href="#industria">Ver soluciones</a></div></article><article class="sector"><div class="sector-media">FOTO · COMERCIO / GASTRONOMÍA</div><div class="sector-copy"><h3>Comercios y gastronomía</h3><p>Programas preventivos y servicios profesionales para establecimientos y requisitos higiénico-sanitarios.</p><a class="textlink route" href="#hogares">Ver soluciones</a></div></article><article class="sector"><div class="sector-media">FOTO · HOGAR / JARDÍN</div><div class="sector-copy"><h3>Hogares</h3><p>Diagnóstico, recomendaciones y tratamientos para problemas concretos de plagas en viviendas.</p><a class="textlink route" href="#hogares">Encontrar una solución</a></div></article></div></div></section>
+
+      <section class="section"><div class="shell"><div class="section-head"><div><span class="eyebrow">Manejo Integrado de Plagas</span><h2>Controlar mejor empieza por entender el problema.</h2></div><p>El enfoque MIP combina inspección, prevención, intervención y monitoreo para reducir riesgos de forma sistemática.</p></div><div class="process"><div class="step"><b>01 · RELEVAR</b><h3>Inspección</h3><p>Identificamos condiciones, actividad y puntos críticos.</p></div><div class="step"><b>02 · DEFINIR</b><h3>Plan de acción</h3><p>Diseñamos medidas según entorno, actividad y riesgo.</p></div><div class="step"><b>03 · EJECUTAR</b><h3>Control</h3><p>Aplicamos acciones preventivas y correctivas definidas.</p></div><div class="step"><b>04 · MEJORAR</b><h3>Monitoreo</h3><p>Registramos resultados y ajustamos el programa.</p></div></div></div></section>
+
+      <section class="section soft"><div class="shell data"><div class="dashboard"><div class="dash-side"></div><div class="dash-main"><div class="dash-box"></div><div class="dash-box dash-chart"></div><div class="dash-row"><div class="dash-box"></div><div class="dash-box"></div><div class="dash-box"></div></div></div></div><div><span class="eyebrow">Tecnología y trazabilidad</span><h2>Información para tomar mejores decisiones.</h2><p class="lead">Planos de dispositivos, ODT, evidencias, hallazgos, tendencias e informes convierten cada intervención en información útil para el seguimiento del programa.</p><div class="features"><div class="feature"><span>✓</span>Planos y estaciones</div><div class="feature"><span>✓</span>ODT digitales</div><div class="feature"><span>✓</span>Evidencias</div><div class="feature"><span>✓</span>Tendencias</div><div class="feature"><span>✓</span>Acciones correctivas</div><div class="feature"><span>✓</span>Soporte para auditorías</div></div></div></div></section>
+
+      <section class="section learn"><div class="shell learn-grid"><div><span class="eyebrow">Aprendé sobre plagas</span><h2>Identificá el problema antes de decidir qué hacer.</h2><p class="lead">Guías simples y técnicas sobre especies, señales de presencia, prevención y control, con foco en información útil para Argentina y el NOA.</p><div class="search"><input id="pestSearch" placeholder="Ej.: ratas, mosquitos, cucarachas…"><button class="btn primary" id="searchBtn">Buscar</button></div></div><div class="pests"><a class="pest route" href="#roedores"><span>R</span><div><strong>Roedores</strong><small>Identificación y prevención</small></div></a><div class="pest"><span>C</span><div><strong>Cucarachas</strong><small>Hábitos y señales</small></div></div><div class="pest"><span>M</span><div><strong>Mosquitos</strong><small>Criaderos y prevención</small></div></div><div class="pest"><span>A</span><div><strong>Alacranes</strong><small>Medidas preventivas</small></div></div><div class="pest"><span>H</span><div><strong>Hormigas</strong><small>Identificación y control</small></div></div><div class="pest"><span>+</span><div><strong>Ver todas</strong><small>Biblioteca de plagas</small></div></div></div></div></section>
+
+      <section class="section"><div class="shell certs"><div><span class="eyebrow">Calidad y medio ambiente</span><h2>Sistemas de gestión que respaldan nuestra forma de trabajar.</h2><p class="lead">La calidad, la gestión ambiental y la mejora continua forman parte de la planificación, ejecución y seguimiento de nuestros servicios.</p><div class="cert-grid"><div class="cert"><div class="mark">ISO</div><strong>Gestión de la Calidad</strong><small>IRAM-ISO 9001:2015 · RI 9000-8842 · IQNET</small></div><div class="cert"><div class="mark">ISO</div><strong>Gestión Ambiental</strong><small>IRAM-ISO 14001:2015 · RI 14000-1012 · IQNET</small></div></div><a class="textlink route" href="#certificaciones" style="display:inline-block;margin-top:17px">Conocer certificaciones</a></div><div class="env"><div class="env-ring"></div><strong>Cuidamos la salud y el medio ambiente</strong><span>Espacio reservado para el recurso gráfico institucional.</span></div></div></section>
+
+      <section class="section soft"><div class="shell local"><div class="local-map">MAPA / COBERTURA<br>Salta · Puna · NOA<br><small>zonas reales a definir</small></div><div><span class="eyebrow">Salta y el NOA</span><h2>Control de plagas y fumigaciones profesionales en Salta.</h2><p class="lead">Atendemos hogares, comercios, empresas e industrias desde Salta, con capacidad para operaciones regionales y entornos remotos. La web final combinará posicionamiento local con contenidos técnicos y sectoriales.</p><div class="local-items"><div>Salta Capital</div><div>Operaciones en Puna</div><div>Empresas e industrias</div><div>Hogares y comercios</div></div></div></div></section>
+
+      <section class="section" id="contacto"><div class="shell"><div class="cta"><div><h2>Contanos qué necesitás resolver.</h2><p>Podemos ayudarte con una consulta puntual o con un programa integral de gestión de plagas.</p></div><div class="actions"><a class="btn light" href="https://wa.me/5493875286093" target="_blank" rel="noopener">WhatsApp</a><button class="btn light" id="proposal">Solicitar propuesta</button></div></div></div></section>
+    </div>
+
+    <div class="page" id="page-mineria"><section class="pagehero"><div class="shell pagehero-grid"><div><span class="eyebrow">División Minería</span><h1>Gestión de plagas para operaciones de alta exigencia.</h1><p class="lead">Programas para Puna, campamentos e instalaciones mineras donde la planificación, la continuidad operativa y la documentación forman parte del servicio.</p><div class="actions"><a class="btn primary" href="#contacto">Solicitar visita técnica</a><a class="btn outline route" href="#inicio">Volver al inicio</a></div></div><div class="pagevisual" data-label="VIDEO / FOTO · OPERACIÓN MINERA · PUNA"></div></div></section><section class="section"><div class="shell"><div class="section-head"><div><span class="eyebrow">Capacidad en campo</span><h2>Un programa pensado para la operación.</h2></div><p>La página final profundizará en infraestructura, personal, flota, procedimientos, monitoreo, trazabilidad, gestión ambiental y documentación.</p></div><div class="cards"><div class="card"><div class="icon">01</div><h3>Campamentos y comedores</h3><p>Prevención y monitoreo en áreas sensibles y de alta circulación.</p></div><div class="card"><div class="icon">02</div><h3>Depósitos y perímetros</h3><p>Control adaptado a actividad, entorno y riesgo.</p></div><div class="card"><div class="icon">03</div><h3>Trazabilidad</h3><p>Planos, estaciones, ODT, hallazgos y seguimiento.</p></div><div class="card"><div class="icon">04</div><h3>Personal y flota</h3><p>Capacidad operativa real para contextos remotos.</p></div><div class="card"><div class="icon">05</div><h3>Documentación</h3><p>Informes, tendencias y evidencias para responsables del cliente.</p></div><div class="card"><div class="icon">06</div><h3>Gestión ambiental</h3><p>Prevención y mejora continua respaldadas por ISO 14001.</p></div></div></div></section></div>
+
+    <div class="page" id="page-industria"><section class="pagehero"><div class="shell pagehero-grid"><div><span class="eyebrow">Industrias y empresas</span><h1>Control que acompaña tus procesos.</h1><p class="lead">Prevención, monitoreo, control y documentación para industrias alimenticias, depósitos, logística y establecimientos con exigencias de higiene y trazabilidad.</p><div class="actions"><a class="btn primary" href="#contacto">Solicitar propuesta</a><a class="btn outline route" href="#inicio">Volver al inicio</a></div></div><div class="pagevisual" data-label="FOTO / VIDEO · INDUSTRIA · DEPÓSITO · ALIMENTOS"></div></div></section><section class="section"><div class="shell"><div class="cards"><div class="card"><div class="icon">A</div><h3>Industria alimenticia</h3><p>MIP, monitoreo, tendencias y documentación.</p></div><div class="card"><div class="icon">B</div><h3>Depósitos y logística</h3><p>Gestión de riesgos vinculados a almacenamiento y tránsito.</p></div><div class="card"><div class="icon">C</div><h3>Comercios y gastronomía</h3><p>Programas adaptados al tipo de establecimiento y su operación.</p></div></div></div></section></div>
+
+    <div class="page" id="page-hogares"><section class="pagehero"><div class="shell pagehero-grid"><div><span class="eyebrow">Hogares y comercios</span><h1>Soluciones profesionales para problemas concretos.</h1><p class="lead">Control de plagas y fumigaciones en Salta para hogares, comercios y establecimientos. Identificamos el problema y definimos el tratamiento adecuado.</p><div class="actions"><a class="btn primary" href="#contacto">Consultar</a><a class="btn outline route" href="#aprende">Identificar una plaga</a></div></div><div class="pagevisual" data-label="FOTO · HOGAR / COMERCIO · ESTÉTICA LIMPIA"></div></div></section><section class="section"><div class="shell"><div class="cards"><a class="card route" href="#roedores"><div class="icon">R</div><h3>Roedores</h3><p>Señales, prevención y control profesional.</p></a><div class="card"><div class="icon">C</div><h3>Cucarachas</h3><p>Identificación, refugios y medidas preventivas.</p></div><div class="card"><div class="icon">A</div><h3>Alacranes e insectos</h3><p>Prevención y reducción de condiciones favorables.</p></div></div></div></section></div>
+
+    <div class="page" id="page-aprende"><section class="pagehero"><div class="shell pagehero-grid"><div><span class="eyebrow">Aprendé sobre plagas</span><h1>Información clara para identificar, prevenir y actuar mejor.</h1><p class="lead">Una biblioteca de guías sobre plagas frecuentes, con información útil, fuentes técnicas y foco regional cuando exista evidencia disponible.</p><div class="actions"><a class="btn primary route" href="#roedores">Ver guía de roedores</a><a class="btn outline route" href="#inicio">Volver al inicio</a></div></div><div class="pagevisual" data-label="MACROFOTOGRAFÍA / ILUSTRACIONES · PLAGAS"></div></div></section><section class="section"><div class="shell"><div class="section-head"><div><span class="eyebrow">Biblioteca de plagas</span><h2>¿Qué necesitás identificar?</h2></div><p>Cada ficha combinará lenguaje accesible con información técnica, prevención, preguntas frecuentes y enlaces a servicios relacionados.</p></div><div class="cards"><a class="card route" href="#roedores"><div class="icon">01</div><h3>Roedores</h3><p>Especies, señales, prevención y control.</p></a><div class="card"><div class="icon">02</div><h3>Mosquitos</h3><p>Ciclo de vida, criaderos y prevención.</p></div><div class="card"><div class="icon">03</div><h3>Cucarachas</h3><p>Hábitos, refugios y señales de actividad.</p></div><div class="card"><div class="icon">04</div><h3>Alacranes</h3><p>Prevención en viviendas y ambientes urbanos.</p></div><div class="card"><div class="icon">05</div><h3>Moscas</h3><p>Factores de atracción y medidas preventivas.</p></div><div class="card"><div class="icon">06</div><h3>Plagas almacenadas</h3><p>Riesgos en alimentos, depósitos y procesos.</p></div></div></div></section></div>
+
+    <div class="page" id="page-roedores"><section class="pagehero"><div class="shell pagehero-grid"><div><span class="eyebrow">Aprendé sobre plagas · Roedores</span><h1>Roedores: señales, prevención e identificación.</h1><p class="lead">Ejemplo de ficha educativa. El contenido científico final deberá validarse con fuentes argentinas y pertinencia regional.</p><div class="actions"><a class="btn primary" href="#contacto">Necesito una inspección</a><a class="btn outline route" href="#aprende">Volver a la biblioteca</a></div></div><div class="pagevisual" data-label="FOTO / ILUSTRACIÓN CIENTÍFICA · ROEDORES"></div></div></section><section class="section"><div class="shell twocol"><div class="visual-light">COMPARATIVA VISUAL<br>Rattus / Mus<br><small>fotografías o ilustraciones validadas</small></div><div><span class="eyebrow">Qué observar</span><h2 style="margin:12px 0 16px">Identificar antes de actuar.</h2><div class="faq"><div><strong>Especies relevantes</strong><p>Bloque para especies pertinentes, sujeto a validación técnica y regional.</p></div><div><strong>Señales de actividad</strong><p>Excrementos, roeduras, huellas, madrigueras, ruidos y daños pueden indicar presencia.</p></div><div><strong>Prevención</strong><p>Orden, gestión de residuos, exclusión de accesos y almacenamiento correcto son medidas clave.</p></div><div><strong>Control profesional</strong><p>La estrategia debe partir de un diagnóstico y de la actividad detectada.</p></div></div></div></div></section></div>
+
+    <div class="page" id="page-certificaciones"><section class="pagehero"><div class="shell pagehero-grid"><div><span class="eyebrow">Calidad y gestión ambiental</span><h1>Certificaciones que respaldan nuestra forma de trabajar.</h1><p class="lead">La nueva web explicará qué está certificado y cómo se traduce en procedimientos, seguimiento y mejora continua.</p><div class="actions"><a class="btn primary" href="#certdetalle">Ver certificaciones</a><a class="btn outline route" href="#inicio">Volver al inicio</a></div></div><div class="pagevisual" data-label="LOGOS IRAM / IQNET + RECURSO AMBIENTAL"></div></div></section><section class="section" id="certdetalle"><div class="shell"><div class="cards"><div class="card"><div class="icon">ISO</div><h3>Gestión de la Calidad</h3><p>IRAM-ISO 9001:2015</p><strong>RI 9000-8842</strong></div><div class="card"><div class="icon">ISO</div><h3>Gestión Ambiental</h3><p>IRAM-ISO 14001:2015</p><strong>RI 14000-1012</strong></div><div class="card"><div class="icon">✓</div><h3>Mejora continua</h3><p>Procedimientos, capacitación, seguimiento y gestión de información.</p></div></div></div></section></div>
+  </main>
+
+  <footer class="footer"><div class="shell"><div class="footer-grid"><div><div class="footer-brand">O.FRE.SER</div><p>Gestión Integral de Plagas para minería, industrias, empresas, comercios y hogares.</p></div><div><h4>Soluciones</h4><a class="route" href="#mineria">Minería</a><a class="route" href="#industria">Industria</a><a class="route" href="#hogares">Hogares y comercios</a></div><div><h4>Aprendé</h4><a class="route" href="#aprende">Biblioteca de plagas</a><a class="route" href="#roedores">Roedores</a><a class="route" href="#certificaciones">Certificaciones</a></div><div><h4>Contacto</h4><span>Gral. Güemes 1340 · Salta</span><span>+54 9 387 528-6093</span><span>grupomoron@ofreser.com.ar</span></div></div><div class="bottom"><span>© 2026 O.FRE.SER · Prototipo conceptual V3</span><span>Mockup noindex · recursos audiovisuales pendientes</span></div></div></footer>
+  <div class="toast" id="toast">Acción de demostración</div>
+
+  <script>
+    /* Router liviano exclusivo del mockup. En producción Blackfish deberá
+       implementar páginas reales con URLs limpias, indexables y canónicas. */
+    const routes=['inicio','mineria','industria','hogares','aprende','roedores','certificaciones'];
+    function render(){
+      const hash=(location.hash||'#inicio').slice(1).split('?')[0];
+      const route=routes.includes(hash)?hash:'inicio';
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById('page-'+route)?.classList.add('active');
+      document.getElementById('mobile').classList.remove('open');
+      if(!location.hash) history.replaceState(null,'','#inicio');
+      scrollTo({top:0,behavior:'instant'});
+    }
+    addEventListener('hashchange',render);render();
+    document.getElementById('menu').onclick=()=>document.getElementById('mobile').classList.toggle('open');
+    const toast=document.getElementById('toast');
+    function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2100)}
+    document.getElementById('proposal').onclick=()=>showToast('En producción abrirá el formulario comercial.');
+    document.getElementById('searchBtn').onclick=()=>{
+      const q=document.getElementById('pestSearch').value.toLowerCase();
+      if(q.includes('rata')||q.includes('roedor')||q.includes('raton')||q.includes('ratón')) location.hash='roedores';
+      else showToast('Buscador conceptual: se conectará a la biblioteca de plagas.');
+    };
+  </script>
+</body>
+</html>
