@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>O.FRE.SER — Rediseño web V6</title>
+<style>
+/* V6 es una capa de prototipo sobre V5 para acelerar validación visual. En producción debe integrarse como código limpio dentro de Odoo. */
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff}iframe{display:block;width:100%;height:100%;border:0}
+</style>
+</head>
+<body>
+<iframe id="site" src="/v5.html#inicio" title="Mockup O.FRE.SER V6"></iframe>
+<script>
+/* La demo reutiliza V5 y agrega las capas comerciales que mejor funcionan en sitios del rubro: servicios visibles, prueba social, FAQ y doble conversión. */
+const frame=document.getElementById('site');
+frame.addEventListener('load',()=>{
+ const d=frame.contentDocument;
+ if(!d || d.getElementById('v6-style')) return;
+ const style=d.createElement('style');
+ style.id='v6-style';
+ style.textContent=`
+ .service-grid-v6{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.service-v6{background:#fff;border:1px solid var(--line);border-radius:13px;padding:22px;min-height:190px;display:flex;flex-direction:column}.service-icon-v6{width:38px;height:38px;border-radius:10px;background:#eef2ff;color:var(--blue);display:grid;place-items:center;font-weight:900;font-size:.76rem;margin-bottom:18px}.service-v6 h3{margin-bottom:8px}.service-v6 p{font-size:.84rem}.service-v6 .textlink{margin-top:auto;padding-top:18px}.review-wrap-v6{display:grid;grid-template-columns:.72fr 1.28fr;gap:42px;align-items:start}.review-intro-v6 h2{margin:11px 0 14px}.review-grid-v6{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.review-v6{border:1px solid var(--line);border-radius:13px;background:#fff;padding:20px;min-height:190px;display:flex;flex-direction:column}.review-v6 .stars{letter-spacing:.12em;color:#b78a18;font-size:.82rem;margin-bottom:14px}.review-v6 blockquote{margin:0;color:var(--ink);font-size:.88rem;line-height:1.6}.review-v6 footer{margin-top:auto;padding-top:18px;color:var(--muted);font-size:.72rem}.faq-wrap-v6{display:grid;grid-template-columns:.72fr 1.28fr;gap:44px}.faq-wrap-v6 h2{margin:11px 0 14px}.faq-list-v6{border-top:1px solid var(--line)}.faq-list-v6 details{border-bottom:1px solid var(--line)}.faq-list-v6 summary{list-style:none;cursor:pointer;padding:18px 36px 18px 0;font-weight:730;position:relative}.faq-list-v6 summary::-webkit-details-marker{display:none}.faq-list-v6 summary:after{content:'+';position:absolute;right:4px;top:16px;color:var(--blue);font-size:1.25rem}.faq-list-v6 details[open] summary:after{content:'–'}.faq-list-v6 details p{padding:0 38px 18px 0;font-size:.85rem}.dual-v6{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cta-v6{border-radius:15px;padding:26px;border:1px solid var(--line);background:#fff}.cta-v6.business{background:var(--navy);border-color:var(--navy)}.cta-v6.business h3,.cta-v6.business p{color:#fff}.cta-v6.business p{opacity:.78}.cta-v6 h3{font-size:1.3rem;margin:8px 0}.cta-v6 p{font-size:.86rem}.cta-v6 .actions{margin-top:18px}.v6-label{display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}.v6-label:before{content:'';width:22px;height:2px;background:var(--green)}
+ @media(max-width:980px){.service-grid-v6{grid-template-columns:1fr 1fr}.review-wrap-v6,.faq-wrap-v6{grid-template-columns:1fr}.review-grid-v6{grid-template-columns:1fr 1fr}.dual-v6{grid-template-columns:1fr}}
+ @media(max-width:650px){.service-grid-v6,.review-grid-v6{grid-template-columns:1fr}}
+ `;
+ d.head.appendChild(style);
+ const clients=d.querySelector('.clients');
+ if(clients){
+  clients.insertAdjacentHTML('afterend',`
+  <section class="section" id="servicios-v6"><div class="shell"><div class="section-head"><div><span class="eyebrow">Servicios principales</span><h2>Soluciones concretas para cada necesidad.</h2></div><p>La web tiene que explicar nuestra capacidad, pero también permitir que una persona identifique rápido qué servicio necesita.</p></div><div class="service-grid-v6">
+   <article class="service-v6"><div class="service-icon-v6">DI</div><h3>Desinsectación</h3><p>Inspección, diagnóstico, prevención y tratamiento profesional de insectos según ambiente y nivel de actividad.</p><a class="textlink route" href="#hogares">Ver servicio</a></article>
+   <article class="service-v6"><div class="service-icon-v6">DR</div><h3>Desratización</h3><p>Prevención, monitoreo y control de roedores con análisis de ingresos, refugios, actividad y factores atrayentes.</p><a class="textlink pest-route" data-pest="roedores" href="#plaga-roedores">Ver servicio</a></article>
+   <article class="service-v6"><div class="service-icon-v6">MIP</div><h3>Manejo Integrado de Plagas</h3><p>Programa continuo basado en diagnóstico, prevención, intervención, monitoreo y mejora.</p><a class="textlink route" href="#industria">Conocer MIP</a></article>
+   <article class="service-v6"><div class="service-icon-v6">MO</div><h3>Monitoreo</h3><p>Seguimiento de actividad, puntos de control, tendencias, hallazgos y acciones correctivas.</p><a class="textlink route" href="#industria">Ver monitoreo</a></article>
+   <article class="service-v6"><div class="service-icon-v6">DM</div><h3>Desinfección microbiana</h3><p>Servicios específicos de reducción de carga microbiana de acuerdo con necesidad y contexto operativo.</p><a class="textlink" href="#contacto">Consultar</a></article>
+   <article class="service-v6"><div class="service-icon-v6">+</div><h3>Servicios específicos</h3><p>Soluciones complementarias y programas adaptados a requisitos particulares de cada establecimiento.</p><a class="textlink" href="#contacto">Consultar</a></article>
+  </div></div></section>`);
+ }
+ const contact=d.querySelector('#contacto');
+ if(contact){
+  contact.insertAdjacentHTML('beforebegin',`
+  <section class="section soft"><div class="shell review-wrap-v6"><div class="review-intro-v6"><span class="eyebrow">Experiencias de clientes</span><h2>La confianza también se demuestra con opiniones reales.</h2><p>En producción conviene integrar reseñas verificables de Google y testimonios autorizados de clientes.</p><p style="margin-top:14px;font-size:.74rem">MOCKUP · reemplazar por reseñas reales antes de publicar.</p></div><div class="review-grid-v6"><article class="review-v6"><div class="stars">★★★★★</div><blockquote>“Espacio para una reseña real sobre atención, profesionalismo o resolución.”</blockquote><footer>RESEÑA GOOGLE · CLIENTE REAL</footer></article><article class="review-v6"><div class="stars">★★★★★</div><blockquote>“Espacio para una experiencia verificable de hogar, comercio o empresa.”</blockquote><footer>RESEÑA GOOGLE · CLIENTE REAL</footer></article><article class="review-v6"><div class="stars">★★★★★</div><blockquote>“Para minería e industria, usar testimonios sólo con autorización de publicación.”</blockquote><footer>TESTIMONIO AUTORIZADO · EMPRESA</footer></article></div></div></section>
+  <section class="section"><div class="shell faq-wrap-v6"><div><span class="eyebrow">Preguntas frecuentes</span><h2>Respuestas rápidas antes de contactarnos.</h2><p>Además de ayudar al usuario, estas preguntas pueden trabajar búsquedas reales relacionadas con fumigaciones y control de plagas en Salta.</p></div><div class="faq-list-v6"><details><summary>¿Realizan fumigaciones y control de plagas en Salta?</summary><p>Sí. O.FRE.SER brinda servicios para hogares, comercios, empresas e industrias, con base en Salta y capacidad operativa regional.</p></details><details><summary>¿Trabajan con minería e industrias?</summary><p>Sí. La propuesta incluye Manejo Integrado de Plagas, monitoreo, documentación, trazabilidad e informes para operaciones de alta exigencia.</p></details><details><summary>¿Qué diferencia hay entre fumigar y un programa MIP?</summary><p>Una aplicación puede ser una medida puntual. El Manejo Integrado de Plagas combina inspección, prevención, control, monitoreo y mejora continua para actuar sobre causas y riesgos.</p></details><details><summary>¿Atienden hogares y pequeños comercios?</summary><p>Sí. El sitio ofrece un recorrido simple para identificar la plaga, conocer medidas preventivas y solicitar una visita o presupuesto.</p></details><details><summary>¿Pueden entregar documentación del servicio para un comercio?</summary><p>Los trabajos pueden documentarse. Los requisitos específicos para habilitación dependen de la autoridad y del tipo de establecimiento.</p></details></div></div></section>
+  <section class="section soft"><div class="shell dual-v6"><div class="cta-v6 business"><span class="v6-label" style="color:#afc3ff">Empresas · Industria · Minería</span><h3>¿Necesitás un relevamiento o propuesta técnica?</h3><p>Coordinemos una visita y evaluemos el contexto operativo.</p><div class="actions"><a class="btn light" href="#contacto">Solicitar propuesta</a></div></div><div class="cta-v6"><span class="v6-label">Hogares · Comercios</span><h3>¿Tenés una plaga y necesitás resolverla?</h3><p>Contanos qué observaste y dónde. Podemos orientarte y coordinar el servicio.</p><div class="actions"><a class="btn primary" target="_blank" rel="noopener" href="https://wa.me/5493875286093">Consultar por WhatsApp</a><a class="btn outline route" href="#aprende">Identificar plaga</a></div></div></div></section>`);
+ }
+ /* Reaplicamos listeners de rutas para los vínculos agregados a la demo. */
+ d.querySelectorAll('#servicios-v6 .route, .dual-v6 .route').forEach(a=>a.addEventListener('click',()=>{}));
+});
+</script>
+</body>
+</html>
