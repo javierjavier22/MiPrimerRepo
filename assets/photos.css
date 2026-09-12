@@ -1,4 +1,4 @@
-/* O.FRE.SER — fotografías reales cargadas como assets individuales. */
+/* O.FRE.SER — fotografías reales cargadas como assets individuales + refinamiento de auditoría. */
 .media-img{background-image:none!important;background-repeat:no-repeat;background-size:cover;background-position:center;background-color:#eef2f7}
 .media-logo{background-image:url("img/logo-ofreser.webp")!important;background-size:contain!important;background-position:center!important;background-color:#fff!important}
 .media-hero-mineria{background-image:url("img/hero-mineria.webp")!important}
@@ -24,3 +24,17 @@
 .media-ambiente{background-image:url("img/cuidamos-ambiente.webp")!important;background-size:contain!important;background-color:#082249!important}
 .media-camioneta-salar{background-image:url("img/camioneta-salar.webp")!important}
 .media-clientes,.media-clientes-mineria{background-image:url("img/cliente-posco-argentina.webp"),url("img/cliente-rio-tinto.webp"),url("img/cliente-ganfeng.webp"),url("img/cliente-pampa-energia.webp"),url("img/cliente-ingenio-san-isidro.webp"),url("img/cliente-philips-morris-massalin.webp"),url("img/cliente-snacko.webp"),url("img/cliente-coprotab.webp")!important;background-size:11% auto,11% auto,11% auto,11% auto,11% auto,11% auto,11% auto,11% auto!important;background-position:3% center,16% center,29% center,42% center,55% center,68% center,81% center,94% center!important;background-repeat:no-repeat!important;background-color:#fff!important}
+
+/* Accesibilidad y refinamiento UI */
+.skip-link{position:fixed;left:16px;top:-80px;z-index:9999;background:#fff;color:#081a34;padding:10px 14px;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.2);font-weight:800}.skip-link:focus{top:12px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #78b7ff;outline-offset:3px}
+body{overflow-x:hidden}
+.navlinks a,.mobile-nav a{border-radius:6px}
+.navlinks a[aria-current="page"]{color:var(--blue)}
+/* jerarquía tipográfica más sobria */
+h1{font-size:clamp(2.55rem,4vw,4.05rem)}h2{font-size:clamp(1.85rem,2.8vw,2.65rem)}.section{padding:76px 0}.lead{max-width:72ch}
+/* mejor comportamiento en pantallas anchas */
+@media(min-width:1600px){.container{width:min(1480px,calc(100% - 64px))}.hero-copy{max-width:720px}}
+@media(max-width:1100px){.team-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){h1{font-size:clamp(2.1rem,10vw,3rem)}h2{font-size:clamp(1.65rem,8vw,2.2rem)}.section{padding:56px 0}.hero{min-height:600px}.hero .container{padding:56px 0 72px}.hero-proof{gap:12px}.hero-proof div{min-width:46%}.team-grid{grid-template-columns:1fr}.wa{width:54px;height:54px;right:16px;bottom:16px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
