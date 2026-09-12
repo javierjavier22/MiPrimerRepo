@@ -1,17 +1,26 @@
 /* O.FRE.SER — interacciones del mockup. Sin dependencias externas. */
-/* Carga la hoja de fotografías reales del mockup. En producción puede enlazarse desde <head>. */
-if(!document.querySelector('link[href="assets/photos.css"]')){
+/* Carga la hoja de fotografías reales del mockup. En producción puede enlazarse directamente desde <head>. */
+if(!document.querySelector('link[href^="assets/photos.css"]')){
   const photos=document.createElement('link');
   photos.rel='stylesheet';
-  photos.href='assets/photos.css?v=1';
+  photos.href='assets/photos.css?v=2';
   document.head.appendChild(photos);
 }
 
 const menuBtn=document.querySelector('.menu-btn');
 const mobileNav=document.querySelector('.mobile-nav');
 if(menuBtn&&mobileNav){
-  menuBtn.addEventListener('click',()=>mobileNav.classList.toggle('open'));
-  mobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobileNav.classList.remove('open')));
+  if(!mobileNav.id) mobileNav.id='mobileNav';
+  menuBtn.setAttribute('aria-controls',mobileNav.id);
+  menuBtn.setAttribute('aria-expanded','false');
+  menuBtn.type='button';
+  const closeMenu=()=>{mobileNav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')};
+  menuBtn.addEventListener('click',()=>{
+    const open=mobileNav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded',String(open));
+  });
+  mobileNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') closeMenu()});
 }
 
 /* Formulario comercial: prepara la consulta en WhatsApp. El mockup no persiste datos. */
@@ -29,6 +38,7 @@ if(form){
       `Teléfono: ${data.get('telefono')||''}`,
       `Mensaje: ${data.get('mensaje')||''}`
     ];
-    window.open('https://wa.me/5493875286093?text='+encodeURIComponent(lines.join('\n')),'_blank','noopener');
+    const url='https://wa.me/5493875286093?text='+encodeURIComponent(lines.join('\n'));
+    window.open(url,'_blank','noopener,noreferrer');
   });
 }
