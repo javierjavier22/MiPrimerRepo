@@ -1,0 +1,26 @@
+/* O.FRE.SER — fotografías reales cargadas como assets individuales. */
+.media-img{background-image:none!important;background-repeat:no-repeat;background-size:cover;background-position:center;background-color:#eef2f7}
+.media-logo{background-image:url("img/logo-ofreser.webp")!important;background-size:contain!important;background-position:center!important;background-color:#fff!important}
+.media-hero-mineria{background-image:url("img/hero-mineria.webp")!important}
+.media-industria,.media-industria-control{background-image:url("img/industria-control.webp")!important}
+.media-hogares{background-image:url("img/hogar-jardin.webp")!important}
+.media-equipo-mineria{background-image:url("img/mineria-equipo.webp")!important}
+.media-trazabilidad,.media-estacion-puna{background-image:url("img/mineria-estacion.webp")!important}
+.media-local-dia{background-image:url("img/local-dia.webp")!important}
+.media-local-interior{background-image:url("img/local-interior.webp")!important}
+.media-equipo-ofreser{background-image:url("img/equipo-ofreser.webp")!important}
+.media-equipo-historico{background-image:url("img/equipo-historico.webp")!important}
+.media-oscar{background-image:url("img/oscar-moron.webp")!important;background-position:center top!important}
+.media-ignacio{background-image:url("img/ignacio-moron.webp")!important;background-position:center top!important}
+.media-pablo{background-image:url("img/pablo-moron.webp")!important;background-position:center top!important}
+.media-francisco{background-image:url("img/francisco-moron.webp")!important;background-position:center top!important}
+.media-sebastian{background-image:url("img/sebastian-moron.webp")!important;background-position:center top!important}
+.media-riesgo-salud{background-image:url("img/riesgo-mosquito.webp")!important}
+.media-riesgo-operacion{background-image:url("img/riesgo-moscas-comedor.webp")!important}
+.media-riesgo-infraestructura{background-image:url("img/riesgo-roedor-infra.webp")!important}
+.media-riesgo-ambiente{background-image:url("img/riesgo-roedor-residuos.webp")!important}
+.media-iso9001{background-image:url("img/iso-9001.webp")!important;background-size:contain!important;background-color:#fff!important}
+.media-iso14001{background-image:url("img/iso-14001.webp")!important;background-size:contain!important;background-color:#fff!important}
+.media-ambiente{background-image:url("img/cuidamos-ambiente.webp")!important;background-size:contain!important;background-color:#082249!important}
+.media-camioneta-salar{background-image:url("img/camioneta-salar.webp")!important}
+.media-clientes,.media-clientes-mineria{background-image:url("img/cliente-posco-argentina.webp"),url("img/cliente-rio-tinto.webp"),url("img/cliente-ganfeng.webp"),url("img/cliente-pampa-energia.webp"),url("img/cliente-ingenio-san-isidro.webp"),url("img/cliente-philips-morris-massalin.webp"),url("img/cliente-snacko.webp"),url("img/cliente-coprotab.webp")!important;background-size:11% auto,11% auto,11% auto,11% auto,11% auto,11% auto,11% auto,11% auto!important;background-position:3% center,16% center,29% center,42% center,55% center,68% center,81% center,94% center!important;background-repeat:no-repeat!important;background-color:#fff!important}
