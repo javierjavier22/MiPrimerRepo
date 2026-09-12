@@ -25,6 +25,22 @@
 .media-camioneta-salar{background-image:url("img/camioneta-salar.webp")!important}
 .media-clientes,.media-clientes-mineria{background-image:url("img/cliente-posco-argentina.webp"),url("img/cliente-rio-tinto.webp"),url("img/cliente-ganfeng.webp"),url("img/cliente-pampa-energia.webp"),url("img/cliente-ingenio-san-isidro.webp"),url("img/cliente-philips-morris-massalin.webp"),url("img/cliente-snacko.webp"),url("img/cliente-coprotab.webp")!important;background-size:11% auto,11% auto,11% auto,11% auto,11% auto,11% auto,11% auto,11% auto!important;background-position:3% center,16% center,29% center,42% center,55% center,68% center,81% center,94% center!important;background-repeat:no-repeat!important;background-color:#fff!important}
 
+/* Dimensiones reales para los <img> incorporados durante la auditoría. */
+.brand>img{width:176px;height:66px;object-fit:contain}
+.footer-logo:not(.media-img){width:170px;height:66px;object-fit:contain;background:#fff;border-radius:8px;margin-bottom:14px}
+.hero>img.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.96) contrast(1.02)}
+.aud-card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.media-split>img{width:100%;height:520px;object-fit:cover;border-radius:16px}
+.pagehero-grid>img{width:100%;height:430px;object-fit:cover;border-radius:18px;box-shadow:var(--shadow)}
+.risk-card>img{height:180px;width:100%;object-fit:cover}
+.iso-card>img{height:135px;width:100%;object-fit:contain;margin-bottom:15px}
+.person>img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top}
+.history>img{border-radius:16px;width:100%;height:420px;object-fit:cover}
+.gallery3>img{border-radius:14px;width:100%;height:320px;object-fit:cover}
+.environment-logo>img{width:100%;height:300px;object-fit:contain}
+.client-logo-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:18px;align-items:center;padding:22px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.client-logo-grid img{width:100%;height:82px;object-fit:contain;padding:8px}
+
 /* Accesibilidad y refinamiento UI */
 .skip-link{position:fixed;left:16px;top:-80px;z-index:9999;background:#fff;color:#081a34;padding:10px 14px;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.2);font-weight:800}.skip-link:focus{top:12px}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #78b7ff;outline-offset:3px}
@@ -35,6 +51,6 @@ body{overflow-x:hidden}
 h1{font-size:clamp(2.55rem,4vw,4.05rem)}h2{font-size:clamp(1.85rem,2.8vw,2.65rem)}.section{padding:76px 0}.lead{max-width:72ch}
 /* mejor comportamiento en pantallas anchas */
 @media(min-width:1600px){.container{width:min(1480px,calc(100% - 64px))}.hero-copy{max-width:720px}}
-@media(max-width:1100px){.team-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:720px){h1{font-size:clamp(2.1rem,10vw,3rem)}h2{font-size:clamp(1.65rem,8vw,2.2rem)}.section{padding:56px 0}.hero{min-height:600px}.hero .container{padding:56px 0 72px}.hero-proof{gap:12px}.hero-proof div{min-width:46%}.team-grid{grid-template-columns:1fr}.wa{width:54px;height:54px;right:16px;bottom:16px}}
+@media(max-width:1100px){.team-grid{grid-template-columns:repeat(2,1fr)}.client-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.pagehero-grid>img,.media-split>img{height:440px}}
+@media(max-width:720px){h1{font-size:clamp(2.1rem,10vw,3rem)}h2{font-size:clamp(1.65rem,8vw,2.2rem)}.section{padding:56px 0}.hero{min-height:600px}.hero .container{padding:56px 0 72px}.hero-proof{gap:12px}.hero-proof div{min-width:46%}.team-grid{grid-template-columns:1fr}.client-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.client-logo-grid img{height:68px}.pagehero-grid>img,.media-split>img,.history>img{height:300px}.gallery3>img{height:260px}.person>img{aspect-ratio:4/5}.brand>img{width:146px;height:54px}.wa{width:54px;height:54px;right:16px;bottom:16px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
