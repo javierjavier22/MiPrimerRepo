@@ -1,3 +1,4 @@
 User-agent: *
-Disallow: /
-# MOCKUP NOINDEX. En producción: habilitar rastreo, publicar sitemap.xml y usar canonicals de ofreser.com.ar.
+Allow: /
+# MOCKUP: cada página usa meta robots noindex,nofollow,noarchive. Se permite el rastreo para que los buscadores puedan leer el noindex.
+# En producción: retirar noindex, mantener rastreo habilitado y publicar sitemap.xml con canonicals de ofreser.com.ar.
