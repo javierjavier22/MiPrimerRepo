@@ -1,0 +1,1 @@
+The production atlas asset needs replacement with the validated 4x6 sprite sheet (960x1080 or 1280x1440).
