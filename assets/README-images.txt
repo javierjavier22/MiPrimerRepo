@@ -1,0 +1,1 @@
+Images are served from atlas.webp. This note is temporary while replacing the sprite sheet asset.
