@@ -1,23 +1,20 @@
-# O.FRE.SER — Mockup web profesional V8
+# O.FRE.SER — Mockup web auditado
 
-## Objetivo
-Referencia funcional y visual para Blackfish / desarrollador web. No es el sitio productivo.
+Versión de demostración para revisión con proveedor de desarrollo web.
 
-## SEO / producción
-- El mockup usa `noindex,nofollow` y `robots.txt` bloqueado para no competir con ofreser.com.ar.
-- En producción: habilitar indexación, revisar canonicals, generar `sitemap.xml`, conservar URLs limpias y aplicar redirecciones 301 desde URLs antiguas.
-- Mantener titles/descriptions, Open Graph, JSON-LD Organization/LocalBusiness y jerarquía H1/H2.
-- Crear arquitectura SEO por intención sin canibalización: control de plagas Salta, minería, MIP, fichas por plaga, etc.
+## Estado intencional del mockup
+- `noindex,nofollow,noarchive` y `robots.txt` bloqueado para evitar competir con ofreser.com.ar.
+- Fotografías reales servidas como assets individuales WebP.
+- HTML semántico, un H1 por página, metadata Open Graph/Twitter, JSON-LD y breadcrumbs.
+- Navegación responsive y accesible, con foco visible y menú móvil con `aria-expanded`.
+- Imágenes bajo el pliegue con `loading=lazy`; imagen principal con preload/fetchpriority.
 
-## Performance
-- El demo usa un atlas WebP optimizado para reducir requests.
-- En producción conviene usar imágenes independientes, `srcset`, WebP/AVIF, lazy loading y dimensiones explícitas para Core Web Vitals.
-
-## Integración
-- El formulario del mockup abre WhatsApp y no almacena datos.
-- En producción debe integrarse con el CRM/Odoo según el flujo definido por Blackfish.
-
-## Contenido
-- Minería incorpora el enfoque de riesgo biológico: salud, operación, infraestructura y ambiente; identificar, evaluar, prevenir, monitorear y mejorar.
-- Calidad y ambiente deben conservar protagonismo: ISO 9001, ISO 14001, prevención, trazabilidad y mejora continua.
-- Logos de clientes: validar autorización final de publicación cuando corresponda.
+## Antes de publicar en producción
+1. Quitar `noindex,nofollow,noarchive` y habilitar robots.
+2. Migrar a URLs limpias (ej. `/mineria/control-de-plagas/`) y definir redirecciones 301 desde URLs antiguas.
+3. Generar `sitemap.xml` real y dar de alta Google Search Console/Bing Webmaster.
+4. Sustituir canonicals del dominio demo por `https://www.ofreser.com.ar/...`.
+5. Confirmar autorización de uso de logos de clientes y testimonios.
+6. Implementar analytics/consentimiento según la política definida por la empresa.
+7. Ejecutar Lighthouse/Core Web Vitals en la infraestructura final y ajustar caché/compresión/CDN.
+8. Mantener cada guía de plagas con bibliografía y revisión técnica antes de indexarla.
