@@ -77,11 +77,10 @@ h1{font-size:clamp(2.55rem,4vw,4.05rem)}h2{font-size:clamp(1.85rem,2.8vw,2.65rem
 @media(max-width:720px){.product-category-grid,.product-page-grid{grid-template-columns:1fr}.home-page .why{grid-template-columns:1fr}.home-page .service{min-height:0}.home-page .hero::before{background-image:linear-gradient(90deg,rgba(8,26,52,.12),rgba(8,26,52,.06)),url("img/hero-mineria.webp");background-size:100% 100%,cover;background-position:center,center}}
 .logo-marquee{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 0;mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
 .logo-marquee-track{display:flex;width:max-content;animation:ofreser-marquee 34s linear infinite;will-change:transform}
-.logo-marquee:hover .logo-marquee-track{animation-play-state:paused}
 .logo-marquee-set{display:flex;align-items:center;gap:26px;padding-right:26px}
 .logo-marquee-item{flex:0 0 164px;height:94px;display:grid;place-items:center;padding:10px 14px;border-right:1px solid #eef1f5}
 .logo-marquee-item img{max-width:100%;width:100%;height:72px;object-fit:contain;filter:saturate(.92);transition:transform .2s ease,filter .2s ease}
-.logo-marquee-item:hover img{transform:scale(1.04);filter:saturate(1)}
+@media(hover:hover) and (pointer:fine){.logo-marquee:hover .logo-marquee-track{animation-play-state:paused}.logo-marquee-item:hover img{transform:scale(1.04);filter:saturate(1)}}
 @keyframes ofreser-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(max-width:720px){.logo-marquee-track{animation-duration:28s}.logo-marquee-item{flex-basis:132px;height:82px}.logo-marquee-item img{height:60px}}
 @media(prefers-reduced-motion:reduce){.logo-marquee{overflow-x:auto;mask-image:none;-webkit-mask-image:none}.logo-marquee-track{animation:none!important}.logo-marquee-set[aria-hidden="true"]{display:none}}
