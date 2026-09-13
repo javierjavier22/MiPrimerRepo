@@ -80,9 +80,21 @@ h1{font-size:clamp(2.55rem,4vw,4.05rem)}h2{font-size:clamp(1.85rem,2.8vw,2.65rem
 .source-box{margin-top:34px;padding:24px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
 .source-box h2{font-size:1.25rem;margin-bottom:10px}.source-box p{font-size:.84rem}.source-box ul{margin:14px 0 0;padding-left:20px}.source-box li{margin:7px 0}.source-box a{color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 
-/* Menú con acceso Inicio adicional. */
-.navlinks{gap:17px;font-size:.83rem}
-@media(max-width:1280px){.navlinks{gap:12px;font-size:.78rem}.header .container{gap:16px}}
+/* Menú ampliado con Inicio + Venta al público. */
+.navlinks{gap:14px;font-size:.8rem;white-space:nowrap}
+@media(max-width:1320px){.navlinks{gap:10px;font-size:.76rem}.header .container{gap:14px}.brand>img{width:158px}}
 @media(max-width:1180px){.navlinks{display:none}.menu-btn{display:block}.header .btn-primary{display:none}}
 @media(max-width:900px){.product-page-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.product-category-grid,.product-page-grid{grid-template-columns:1fr}.home-page .why{grid-template-columns:1fr}.home-page .service{min-height:0}.home-page .hero::before{background-image:linear-gradient(90deg,rgba(8,26,52,.12),rgba(8,26,52,.06)),url("img/hero-mineria.webp");background-size:100% 100%,cover;background-position:center,center}}
+
+/* Marquesina de clientes: continua, sobria y pausada al pasar el mouse. */
+.logo-marquee{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 0;mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
+.logo-marquee-track{display:flex;width:max-content;animation:ofreser-marquee 34s linear infinite;will-change:transform}
+.logo-marquee:hover .logo-marquee-track{animation-play-state:paused}
+.logo-marquee-set{display:flex;align-items:center;gap:26px;padding-right:26px}
+.logo-marquee-item{flex:0 0 164px;height:94px;display:grid;place-items:center;padding:10px 14px;border-right:1px solid #eef1f5}
+.logo-marquee-item img{max-width:100%;width:100%;height:72px;object-fit:contain;filter:saturate(.92);transition:transform .2s ease,filter .2s ease}
+.logo-marquee-item:hover img{transform:scale(1.04);filter:saturate(1)}
+@keyframes ofreser-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:720px){.logo-marquee-track{animation-duration:28s}.logo-marquee-item{flex-basis:132px;height:82px}.logo-marquee-item img{height:60px}}
+@media(prefers-reduced-motion:reduce){.logo-marquee{overflow-x:auto;mask-image:none;-webkit-mask-image:none}.logo-marquee-track{animation:none!important}.logo-marquee-set[aria-hidden="true"]{display:none}}
