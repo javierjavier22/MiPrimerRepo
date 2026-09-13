@@ -197,23 +197,38 @@ async function getClassifier() {
   return classifier;
 }
 
-/* Agrupa los prompts equivalentes para que la salida sea una categoría útil. */
+/*
+  Cada plaga usa más de un prompt textual. El clasificador reparte el puntaje entre
+  esos prompts, por lo que hay que SUMARLOS por categoría. Tomar sólo el máximo
+  penalizaba precisamente a las categorías mejor reconocidas y podía producir un
+  falso "no concluyente" incluso en imágenes evidentes.
+*/
 function aggregate(raw) {
   const grouped = new Map();
   raw.forEach(item => {
     const pest = promptToPest.get(item.label);
     if (!pest) return;
     const previous = grouped.get(pest.id);
-    if (!previous || item.score > previous.score) grouped.set(pest.id, { pest, score: item.score });
+    if (previous) previous.score += item.score;
+    else grouped.set(pest.id, { pest, score: item.score });
   });
   return [...grouped.values()].sort((a, b) => b.score - a.score);
 }
 
+/*
+  Con 15 categorías, una distribución completamente uniforme ronda 6,7% por grupo.
+  Por eso no usamos un umbral absoluto de 22% como antes: además del puntaje superior,
+  medimos cuánto se separa de la segunda opción. Las categorías sensibles siguen
+  mostrándose siempre como orientativas y nunca como confirmación de especie.
+*/
 function confidence(top, second) {
   if (!top) return 'none';
-  const margin = top.score - (second?.score || 0);
-  if (top.score >= 0.36 && margin >= 0.10) return 'high';
-  if (top.score >= 0.22 && margin >= 0.05) return 'medium';
+  const secondScore = second?.score || 0;
+  const margin = top.score - secondScore;
+  const ratio = secondScore > 0 ? top.score / secondScore : 99;
+  if (top.score >= 0.30 && margin >= 0.10) return 'high';
+  if (top.score >= 0.16 && margin >= 0.045) return 'medium';
+  if (top.score >= 0.12 && margin >= 0.035 && ratio >= 1.6) return 'medium';
   return 'low';
 }
 
@@ -234,7 +249,7 @@ function renderResult(ranked) {
     body.innerHTML = `
       <span class="demo-tag">Motor real · Beta</span>
       <p style="margin-top:10px">La imagen no separa con suficiente claridad una categoría de las demás. Preferimos no inventar una identificación. Probá con otra foto más cerca, con buena luz y el ejemplar ocupando una parte mayor de la imagen.</p>
-      ${ranked.length ? `<div class="result-grid"><div class="result-mini"><strong>Posibilidades débiles</strong><p>${ranked.slice(0,3).map(x => x.pest.name).join(' · ')}</p></div><div class="result-mini"><strong>Qué hacer</strong><p>Volvé a fotografiar el ejemplar desde arriba o de costado y, si necesitás resolverlo ahora, consultanos.</p></div></div>` : ''}
+      ${ranked.length ? `<div class="result-grid"><div class="result-mini"><strong>Primeras coincidencias del modelo</strong><p>${ranked.slice(0,3).map(x => `${x.pest.name} (${pct(x.score)})`).join(' · ')}</p></div><div class="result-mini"><strong>Qué hacer</strong><p>Volvé a fotografiar el ejemplar desde arriba o de costado y, si necesitás resolverlo ahora, consultanos.</p></div></div>` : ''}
       ${whatsappButton('Plaga no identificada con suficiente confianza')}
     `;
     return;
