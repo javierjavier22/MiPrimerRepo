@@ -127,6 +127,89 @@ if(currentFile==='mineria.html'&&!document.querySelector('.mining-event-section'
   if(clientSection) clientSection.insertAdjacentHTML('beforebegin',html); else document.querySelector('main')?.insertAdjacentHTML('beforeend',html);
 }
 
+/* Carrusel del equipo en Nosotros: automático, manual, accesible y con swipe en móvil. */
+if(currentFile==='nosotros.html'&&!document.querySelector('.team-photo-carousel')){
+  const teamSection=[...document.querySelectorAll('main > section')].find(s=>s.textContent.includes('El servicio se construye entre áreas'));
+  const originalImage=teamSection?.querySelector('.container > img');
+  if(teamSection&&originalImage){
+    const carouselPhotos=[
+      ['equipo-ofreser.webp','Equipo O.FRE.SER','Equipo O.FRE.SER'],
+      ['equipo-directivo-banner.webp','Equipo O.FRE.SER en actividad institucional','Equipo y presencia institucional'],
+      ['equipo-directivo-local.webp','Equipo O.FRE.SER en el local comercial','Equipo y atención en Salta'],
+      ['mineria-equipo.webp','Equipo O.FRE.SER en operación minera','Trabajo en operaciones de alta exigencia'],
+      ['mineria-operarios.webp','Operarios O.FRE.SER en campo','Nuestro equipo técnico en campo']
+    ];
+    const style=document.createElement('style');
+    style.textContent=`
+      .team-photo-carousel{position:relative;border-radius:18px;overflow:hidden;background:#081a34;box-shadow:var(--shadow);outline:none}
+      .team-carousel-stage{position:relative;aspect-ratio:16/8.7;min-height:360px;background:#081a34}
+      .team-carousel-slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .55s ease;display:grid;grid-template-rows:1fr auto;background:#081a34}
+      .team-carousel-slide.is-active{opacity:1;visibility:visible;z-index:1}
+      .team-carousel-slide img{width:100%;height:100%;min-height:0;object-fit:contain;object-position:center;background:#081a34}
+      .team-carousel-caption{position:absolute;left:18px;bottom:18px;z-index:2;background:rgba(8,26,52,.86);color:#fff;padding:9px 13px;border-radius:9px;font-size:.78rem;font-weight:760;backdrop-filter:blur(8px)}
+      .team-carousel-btn{position:absolute;top:50%;z-index:4;transform:translateY(-50%);width:46px;height:46px;border:1px solid rgba(255,255,255,.32);border-radius:50%;background:rgba(8,26,52,.74);color:#fff;font-size:1.7rem;line-height:1;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+      .team-carousel-btn:hover{background:rgba(23,56,176,.92)}
+      .team-carousel-prev{left:16px}.team-carousel-next{right:16px}
+      .team-carousel-dots{display:flex;justify-content:center;gap:8px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 18px 18px}
+      .team-carousel-dot{width:10px;height:10px;border:0;border-radius:50%;padding:0;background:#c7cfdb;cursor:pointer}
+      .team-carousel-dot.is-active{background:var(--blue);transform:scale(1.18)}
+      @media(max-width:720px){
+        .team-carousel-stage{aspect-ratio:4/3;min-height:250px}
+        .team-carousel-slide img{object-fit:contain}
+        .team-carousel-btn{width:42px;height:42px;font-size:1.5rem}
+        .team-carousel-prev{left:10px}.team-carousel-next{right:10px}
+        .team-carousel-caption{left:12px;right:12px;bottom:12px;font-size:.72rem;text-align:center}
+      }
+      @media(prefers-reduced-motion:reduce){.team-carousel-slide{transition:none}}
+    `;
+    document.head.appendChild(style);
+
+    const carousel=document.createElement('div');
+    carousel.className='team-photo-carousel';
+    carousel.setAttribute('role','region');
+    carousel.setAttribute('aria-label','Galería de fotos del equipo O.FRE.SER');
+    carousel.setAttribute('tabindex','0');
+
+    const stage=document.createElement('div');stage.className='team-carousel-stage';
+    const slides=carouselPhotos.map(([src,alt,caption],i)=>{
+      const figure=document.createElement('figure');figure.className='team-carousel-slide'+(i===0?' is-active':'');figure.setAttribute('aria-hidden',i===0?'false':'true');
+      const img=document.createElement('img');img.src='assets/img/'+src;img.alt=alt;img.loading=i===0?'eager':'lazy';img.decoding='async';
+      const figcaption=document.createElement('figcaption');figcaption.className='team-carousel-caption';figcaption.textContent=caption;
+      figure.append(img,figcaption);stage.appendChild(figure);return figure;
+    });
+
+    const prev=document.createElement('button');prev.type='button';prev.className='team-carousel-btn team-carousel-prev';prev.setAttribute('aria-label','Foto anterior');prev.textContent='‹';
+    const next=document.createElement('button');next.type='button';next.className='team-carousel-btn team-carousel-next';next.setAttribute('aria-label','Foto siguiente');next.textContent='›';
+    stage.append(prev,next);
+
+    const dots=document.createElement('div');dots.className='team-carousel-dots';
+    const dotButtons=carouselPhotos.map((_,i)=>{
+      const dot=document.createElement('button');dot.type='button';dot.className='team-carousel-dot'+(i===0?' is-active':'');dot.setAttribute('aria-label',`Ir a la foto ${i+1} de ${carouselPhotos.length}`);dot.setAttribute('aria-pressed',i===0?'true':'false');dots.appendChild(dot);return dot;
+    });
+    carousel.append(stage,dots);originalImage.replaceWith(carousel);
+
+    let activeIndex=0;let timer=null;let touchStartX=0;
+    const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const showSlide=index=>{
+      activeIndex=(index+slides.length)%slides.length;
+      slides.forEach((slide,i)=>{const active=i===activeIndex;slide.classList.toggle('is-active',active);slide.setAttribute('aria-hidden',active?'false':'true')});
+      dotButtons.forEach((dot,i)=>{const active=i===activeIndex;dot.classList.toggle('is-active',active);dot.setAttribute('aria-pressed',active?'true':'false')});
+    };
+    const stopAuto=()=>{if(timer){clearInterval(timer);timer=null}};
+    const startAuto=()=>{if(!reducedMotion&&!timer) timer=setInterval(()=>showSlide(activeIndex+1),5000)};
+    prev.addEventListener('click',()=>{showSlide(activeIndex-1);stopAuto();startAuto()});
+    next.addEventListener('click',()=>{showSlide(activeIndex+1);stopAuto();startAuto()});
+    dotButtons.forEach((dot,i)=>dot.addEventListener('click',()=>{showSlide(i);stopAuto();startAuto()}));
+    carousel.addEventListener('mouseenter',stopAuto);carousel.addEventListener('mouseleave',startAuto);
+    carousel.addEventListener('focusin',stopAuto);carousel.addEventListener('focusout',startAuto);
+    carousel.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();showSlide(activeIndex-1)}if(e.key==='ArrowRight'){e.preventDefault();showSlide(activeIndex+1)}});
+    carousel.addEventListener('touchstart',e=>{touchStartX=e.changedTouches[0].clientX;stopAuto()},{passive:true});
+    carousel.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchStartX;if(Math.abs(dx)>45) showSlide(activeIndex+(dx<0?1:-1));startAuto()},{passive:true});
+    document.addEventListener('visibilitychange',()=>document.hidden?stopAuto():startAuto());
+    startAuto();
+  }
+}
+
 const menuBtn=document.querySelector('.menu-btn');
 const mobileNav=document.querySelector('.mobile-nav');
 if(menuBtn&&mobileNav){
