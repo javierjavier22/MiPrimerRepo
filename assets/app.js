@@ -3,28 +3,44 @@
 if(!document.querySelector('link[href^="assets/photos.css"]')){
   const photos=document.createElement('link');
   photos.rel='stylesheet';
-  photos.href='assets/photos.css?v=3';
+  photos.href='assets/photos.css?v=4';
   document.head.appendChild(photos);
 }
 
-/* Mejora de navegación: acceso Inicio visible además del logo. */
 const currentFile=(location.pathname.split('/').pop()||'index.html');
-document.querySelectorAll('.navlinks,.mobile-nav').forEach(nav=>{
-  const hasInicio=[...nav.querySelectorAll('a')].some(a=>a.textContent.trim()==='Inicio');
-  if(!hasInicio){
-    const a=document.createElement('a');
-    a.href='index.html';a.textContent='Inicio';
-    if(currentFile==='index.html'||currentFile===''){a.classList.add('active');a.setAttribute('aria-current','page')}
-    nav.insertBefore(a,nav.firstChild);
-  }
-});
 
-/* Link del local/productos en el footer sin recargar el menú principal. */
+/* Navegación principal: orden comercial definido para el mockup. */
+const navItems=[
+  ['index.html','Inicio'],
+  ['mineria.html','Minería'],
+  ['industria.html','Industria'],
+  ['hogares.html','Hogares y comercios'],
+  ['calidad-ambiente.html','Calidad y ambiente'],
+  ['aprende.html','Aprendé sobre plagas'],
+  ['productos.html','Venta al público'],
+  ['nosotros.html','Nosotros']
+];
+function rebuildNav(nav,isMobile=false){
+  if(!nav) return;
+  const cta=isMobile?nav.querySelector('.btn'):null;
+  [...nav.querySelectorAll('a:not(.btn)')].forEach(a=>a.remove());
+  navItems.forEach(([href,label])=>{
+    const a=document.createElement('a');
+    a.href=href;a.textContent=label;
+    const active=(currentFile===href)||(currentFile===''&&href==='index.html');
+    if(active){a.classList.add('active');a.setAttribute('aria-current','page')}
+    if(cta) nav.insertBefore(a,cta); else nav.appendChild(a);
+  });
+}
+rebuildNav(document.querySelector('.navlinks'));
+rebuildNav(document.querySelector('.mobile-nav'),true);
+
+/* Link del local/productos también en el footer. */
 document.querySelectorAll('.footer h4').forEach(h=>{
   if(h.textContent.trim()==='Información'){
     const col=h.parentElement;
     if(!col.querySelector('a[href="productos.html"]')){
-      const a=document.createElement('a');a.href='productos.html';a.textContent='Productos y local';
+      const a=document.createElement('a');a.href='productos.html';a.textContent='Venta al público';
       const first=col.querySelector('a');first?first.insertAdjacentElement('afterend',a):col.appendChild(a);
     }
   }
@@ -64,6 +80,44 @@ if(currentFile==='aprende.html'){
   if(cards) cards.innerHTML=cardMarkup;
   const headP=document.querySelector('.section-head > p');
   if(headP) headP.textContent='Guías prácticas basadas en fuentes sanitarias oficiales, organismos técnicos y universidades. Cada ficha separa identificación, prevención y cuándo conviene recurrir a un profesional.';
+}
+
+/* Marquesina continua de clientes en HOME. */
+if(document.body.classList.contains('home-page')){
+  const logoGrid=document.querySelector('.client-logo-grid');
+  if(logoGrid){
+    const logos=[
+      ['cliente-posco-argentina.webp','POSCO Argentina'],
+      ['cliente-rio-tinto.webp','Rio Tinto'],
+      ['cliente-ganfeng.webp','Ganfeng Lithium'],
+      ['cliente-mansfield.webp','Mansfield Minera'],
+      ['cliente-pampa-energia.webp','Pampa Energía'],
+      ['cliente-ingenio-san-isidro.webp','Ingenio San Isidro'],
+      ['cliente-philips-morris-massalin.webp','Philip Morris Argentina'],
+      ['cliente-snacko.webp','Snacko'],
+      ['cliente-coprotab.webp','COPROTAB'],
+      ['cliente-grupo-agv.webp','Grupo AGV'],
+      ['cliente-grupo-ruiz-de-los-llanos.webp','Grupo Ruiz de los Llanos'],
+      ['cliente-high-luck.webp','High Luck'],
+      ['cliente-molino-pampa-blanca.webp','Molino Pampa Blanca'],
+      ['cliente-puna-mining.webp','Puna Mining'],
+      ['cliente-catering-de-altura.webp','Catering de Altura']
+    ];
+    const makeSet=(hidden=false)=>{
+      const set=document.createElement('div');set.className='logo-marquee-set';
+      if(hidden) set.setAttribute('aria-hidden','true');
+      logos.forEach(([src,alt])=>{
+        const item=document.createElement('div');item.className='logo-marquee-item';
+        const img=document.createElement('img');img.src='assets/img/'+src;img.alt=hidden?'':alt;img.loading='lazy';img.decoding='async';
+        item.appendChild(img);set.appendChild(item);
+      });
+      return set;
+    };
+    const viewport=document.createElement('div');viewport.className='logo-marquee';viewport.setAttribute('aria-label','Empresas que confían en O.FRE.SER');
+    const track=document.createElement('div');track.className='logo-marquee-track';
+    track.append(makeSet(false),makeSet(true));viewport.appendChild(track);
+    logoGrid.replaceWith(viewport);
+  }
 }
 
 const menuBtn=document.querySelector('.menu-btn');
