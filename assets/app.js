@@ -120,6 +120,13 @@ if(document.body.classList.contains('home-page')){
   }
 }
 
+/* Video institucional: Argentina Mining en la página de Minería. Se incrusta desde Drive sólo al entrar en esa página. */
+if(currentFile==='mineria.html'&&!document.querySelector('.mining-event-section')){
+  const clientSection=[...document.querySelectorAll('main > section')].find(s=>s.textContent.includes('Organizaciones que confían en O.FRE.SER'));
+  const html=`<section class="section soft mining-event-section"><div class="container"><div class="section-head"><div><span class="eyebrow">Presencia en el sector</span><h2>O.FRE.SER en Argentina Mining.</h2></div><p>Además del trabajo en campo, participamos en espacios que reúnen a empresas, proveedores y profesionales de la actividad minera. Son oportunidades para mostrar nuestro enfoque, intercambiar experiencia y mantenernos cerca de los desafíos reales del sector.</p></div><div class="media-split reverse"><div><span class="eyebrow">Argentina Mining</span><h3 style="font-size:1.35rem;margin:10px 0 12px">Stand, equipo y presencia institucional.</h3><p class="lead">Un registro breve de nuestra participación en el encuentro, mostrando la presencia de O.FRE.SER dentro del ecosistema minero.</p><div class="actions"><a class="btn btn-primary" href="contacto.html">Hablar con División Minería</a></div></div><iframe aria-label="Video O.FRE.SER en Argentina Mining" allow="autoplay; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" src="https://drive.google.com/file/d/1MhgARtrJDiHvqrJKOU3lAcYKvpjPgftx/preview" style="width:100%;aspect-ratio:16/9;border:0;border-radius:16px;box-shadow:var(--shadow);background:#081a34"></iframe></div></div></section>`;
+  if(clientSection) clientSection.insertAdjacentHTML('beforebegin',html); else document.querySelector('main')?.insertAdjacentHTML('beforeend',html);
+}
+
 const menuBtn=document.querySelector('.menu-btn');
 const mobileNav=document.querySelector('.mobile-nav');
 if(menuBtn&&mobileNav){
