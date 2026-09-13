@@ -41,23 +41,29 @@ if(document.body.classList.contains('home-page')&&!document.querySelector('.reta
   if(contactSection) contactSection.insertAdjacentHTML('beforebegin',html); else document.querySelector('main')?.insertAdjacentHTML('beforeend',html);
 }
 
-/* Centro de conocimiento: cada tarjeta abre su guía específica. */
+const knowledgeCards=[
+  ['Roedores','Ratas y ratones','Señales de actividad, especies urbanas frecuentes, prevención y monitoreo.','roedores.html'],
+  ['Mosquitos','Criaderos y prevención','Aedes aegypti, agua acumulada, prevención y control.','mosquitos.html'],
+  ['Cucarachas','Hábitos y refugios','Identificación, saneamiento, exclusión y Manejo Integrado.','cucarachas.html'],
+  ['Alacranes','Prevención y seguridad','Cómo reducir refugios e ingresos y qué hacer ante una picadura.','alacranes.html'],
+  ['Moscas','Saneamiento y exclusión','Fuentes de atracción, protección de alimentos y monitoreo.','moscas.html'],
+  ['Almacenadas','Productos almacenados','Polillas y escarabajos asociados a alimentos secos y depósitos.','plagas-almacenadas.html']
+];
+const cardMarkup=knowledgeCards.map(([k,t,d,h])=>`<article class="card pest-card"><span class="kicker">${k}</span><h3>${t}</h3><p>${d}</p><a class="link" href="${h}">Abrir guía</a></article>`).join('');
+
+/* HOME: mostrar todas las guías, no sólo un teaser. */
+if(document.body.classList.contains('home-page')){
+  const learnSection=[...document.querySelectorAll('main > section')].find(s=>s.textContent.includes('Entender el problema es el primer paso'));
+  const cards=learnSection?.querySelector('.cards');
+  if(cards) cards.innerHTML=cardMarkup;
+}
+
+/* Centro de conocimiento: cada tarjeta abre su guía específica y el texto refleja el estado real. */
 if(currentFile==='aprende.html'){
-  const pestMap={
-    'Ratas y ratones':'roedores.html',
-    'Criaderos y prevención':'mosquitos.html',
-    'Hábitos y refugios':'cucarachas.html',
-    'Prevención en viviendas':'alacranes.html',
-    'Atracción y saneamiento':'moscas.html',
-    'Plagas de productos':'plagas-almacenadas.html'
-  };
-  document.querySelectorAll('.card').forEach(card=>{
-    const h=card.querySelector('h3'); if(!h) return;
-    const href=pestMap[h.textContent.trim()]; if(!href) return;
-    let link=card.querySelector('.link');
-    if(!link){link=document.createElement('a');link.className='link';link.textContent='Abrir guía';card.appendChild(link)}
-    link.href=href;
-  });
+  const cards=document.querySelector('.cards');
+  if(cards) cards.innerHTML=cardMarkup;
+  const headP=document.querySelector('.section-head > p');
+  if(headP) headP.textContent='Guías prácticas basadas en fuentes sanitarias oficiales, organismos técnicos y universidades. Cada ficha separa identificación, prevención y cuándo conviene recurrir a un profesional.';
 }
 
 const menuBtn=document.querySelector('.menu-btn');
