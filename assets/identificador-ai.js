@@ -145,8 +145,23 @@ function showPreview(file) {
   setButton('Analizar foto con IA', false);
 }
 
+/*
+  Algunos selectores de archivos de Android devuelven fotos descargadas con MIME vacío
+  o application/octet-stream. Por eso validamos también la extensión del archivo y no
+  descartamos silenciosamente una imagen válida.
+*/
+function isImageFile(file) {
+  if (!file) return false;
+  if (typeof file.type === 'string' && file.type.startsWith('image/')) return true;
+  return /\.(jpe?g|png|webp|gif|heic|heif|avif)$/i.test(file.name || '');
+}
+
 function loadFile(file) {
-  if (!file || !file.type.startsWith('image/')) return;
+  if (!file) return;
+  if (!isImageFile(file)) {
+    showError('El archivo seleccionado no parece ser una imagen compatible. Probá con JPG, PNG, WEBP, HEIC o AVIF.');
+    return;
+  }
   if (file.size > 15 * 1024 * 1024) {
     showError('La imagen es demasiado pesada. Elegí una foto de menos de 15 MB.');
     return;
@@ -154,7 +169,16 @@ function loadFile(file) {
   showPreview(file);
 }
 
-input.addEventListener('change', () => loadFile(input.files[0]));
+/*
+  Se limpia el valor antes de abrir el selector para que Android dispare el evento
+  aunque el usuario vuelva a elegir exactamente la misma foto en pruebas sucesivas.
+*/
+input.addEventListener('click', () => {
+  input.value = '';
+});
+input.addEventListener('change', () => loadFile(input.files?.[0]));
+input.addEventListener('input', () => loadFile(input.files?.[0]));
+
 ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => {
   e.preventDefault();
   drop.classList.add('drag');
@@ -202,8 +226,9 @@ async function prepareImage(file) {
       throw new Error('Tu navegador no pudo comprimir esta imagen. Probá con una captura de pantalla o una foto JPG/PNG más liviana.');
     }
     const dataUrl = await fileToDataUrl(file);
+    const fallbackMime = (file.type && file.type.startsWith('image/')) ? file.type : 'image/jpeg';
     return {
-      mimeType: file.type || 'image/jpeg',
+      mimeType: fallbackMime,
       imageBase64: dataUrl.split(',')[1]
     };
   }
