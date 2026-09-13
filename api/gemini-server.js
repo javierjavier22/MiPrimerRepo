@@ -1,138 +1,35 @@
 /*
-  O.FRE.SER — Backend de identificación orientativa de plagas con Gemini.
-
-  Objetivos:
-  - mantener la API key fuera del navegador;
-  - aceptar una sola imagen por consulta;
-  - enviar imagen + contexto a Gemini;
-  - devolver JSON estructurado y conservador;
-  - limitar el universo a plagas relevantes para Argentina / NOA;
-  - no generar dosis químicas ni reemplazar una identificación profesional.
-
-  Variables de entorno:
-  - GEMINI_API_KEY: obligatoria para analizar imágenes.
-  - GEMINI_MODEL: opcional. Default: gemini-3.8-flash.
-  - ALLOWED_ORIGINS: opcional, lista separada por coma.
-  - PORT: definida por Render.
+  O.FRE.SER — Backend Gemini para identificación orientativa de plagas.
+  La API key vive sólo en Render. La respuesta de Gemini se valida antes de enviarse al navegador.
 */
-
 const http = require('node:http');
 
 const PORT = Number(process.env.PORT || 10000);
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const ALLOWED_ORIGINS = new Set(
-  (process.env.ALLOWED_ORIGINS ||
-    'https://ofreser-v8-imagefix-demo.onrender.com,https://www.ofreser.com.ar,https://ofreser.com.ar,http://localhost:3000,http://127.0.0.1:3000')
-    .split(',')
-    .map(v => v.trim())
-    .filter(Boolean)
-);
+const ALLOWED_ORIGINS = new Set((process.env.ALLOWED_ORIGINS ||
+  'https://ofreser-v8-imagefix-demo.onrender.com,https://www.ofreser.com.ar,https://ofreser.com.ar,http://localhost:3000,http://127.0.0.1:3000')
+  .split(',').map(v => v.trim()).filter(Boolean));
 
 const MAX_BODY_BYTES = 6 * 1024 * 1024;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 30;
 const buckets = new Map();
 
-const allowedMimeTypes = new Set([
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-  'image/heic',
-  'image/heif',
-  'image/avif'
+const ALLOWED_MIME = new Set(['image/jpeg','image/jpg','image/png','image/webp','image/heic','image/heif','image/avif']);
+const ALLOWED_KEYS = new Set([
+  'cockroach_german','cockroach_american','cockroach_other',
+  'rodent_house_mouse','rodent_rat','rodent_field_or_puna',
+  'mosquito_aedes','mosquito_other','fly','ant','scorpion','kissing_bug',
+  'spider','bed_bug','flea','tick','pantry_moth','stored_product_beetle',
+  'wasp','termite','other_pest','not_pest','inconclusive'
 ]);
 
-const allowedCategoryKeys = [
-  'cockroach_german',
-  'cockroach_american',
-  'cockroach_other',
-  'rodent_house_mouse',
-  'rodent_rat',
-  'rodent_field_or_puna',
-  'mosquito_aedes',
-  'mosquito_other',
-  'fly',
-  'ant',
-  'scorpion',
-  'kissing_bug',
-  'spider',
-  'bed_bug',
-  'flea',
-  'tick',
-  'pantry_moth',
-  'stored_product_beetle',
-  'wasp',
-  'termite',
-  'other_pest',
-  'not_pest',
-  'inconclusive'
-];
-
-const responseSchema = {
-  type: 'object',
-  properties: {
-    status: {
-      type: 'string',
-      enum: ['identified', 'uncertain', 'not_pest'],
-      description: 'identified sólo si la evidencia visual alcanza; uncertain si hay duda real; not_pest si no parece una plaga.'
-    },
-    category_key: {
-      type: 'string',
-      enum: allowedCategoryKeys
-    },
-    group_name: {
-      type: 'string',
-      description: 'Nombre común general en español, por ejemplo Cucaracha o Alacrán.'
-    },
-    likely_species: {
-      type: ['string', 'null'],
-      description: 'Nombre común y/o científico sólo si la imagen permite sostenerlo visualmente.'
-    },
-    confidence: {
-      type: 'string',
-      enum: ['high', 'medium', 'low']
-    },
-    visible_traits: {
-      type: 'array',
-      items: { type: 'string' },
-      maxItems: 5
-    },
-    alternatives: {
-      type: 'array',
-      maxItems: 2,
-      items: {
-        type: 'object',
-        properties: {
-          name: { type: 'string' },
-          reason: { type: 'string' }
-        },
-        required: ['name', 'reason']
-      }
-    },
-    explanation: {
-      type: 'string',
-      description: 'Explicación breve y prudente de por qué el resultado encaja o por qué no es concluyente.'
-    }
-  },
-  required: [
-    'status',
-    'category_key',
-    'group_name',
-    'likely_species',
-    'confidence',
-    'visible_traits',
-    'alternatives',
-    'explanation'
-  ]
-};
-
-function json(res, status, payload, origin) {
+function sendJson(res, status, payload, origin='') {
   const headers = {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
-    'X-Content-Type-Options': 'nosniff'
+    'Content-Type':'application/json; charset=utf-8',
+    'Cache-Control':'no-store',
+    'X-Content-Type-Options':'nosniff'
   };
   if (origin && ALLOWED_ORIGINS.has(origin)) {
     headers['Access-Control-Allow-Origin'] = origin;
@@ -142,230 +39,174 @@ function json(res, status, payload, origin) {
   res.end(JSON.stringify(payload));
 }
 
-function getClientIp(req) {
-  return String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown')
-    .split(',')[0]
-    .trim();
+function clientIp(req) {
+  return String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').split(',')[0].trim();
 }
 
 function rateLimited(ip) {
   const now = Date.now();
-  const current = buckets.get(ip);
-  if (!current || now - current.start >= RATE_LIMIT_WINDOW_MS) {
-    buckets.set(ip, { start: now, count: 1 });
+  const bucket = buckets.get(ip);
+  if (!bucket || now - bucket.start >= RATE_LIMIT_WINDOW_MS) {
+    buckets.set(ip, {start: now, count: 1});
     return false;
   }
-  current.count += 1;
-  return current.count > RATE_LIMIT_MAX;
+  bucket.count += 1;
+  return bucket.count > RATE_LIMIT_MAX;
 }
 
-async function readJson(req) {
-  return await new Promise((resolve, reject) => {
+function readBody(req) {
+  return new Promise((resolve, reject) => {
     let total = 0;
     const chunks = [];
     req.on('data', chunk => {
       total += chunk.length;
       if (total > MAX_BODY_BYTES) {
-        reject(Object.assign(new Error('payload_too_large'), { code: 'PAYLOAD_TOO_LARGE' }));
+        reject(new Error('payload_too_large'));
         req.destroy();
         return;
       }
       chunks.push(chunk);
     });
     req.on('end', () => {
-      try {
-        resolve(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'));
-      } catch {
-        reject(Object.assign(new Error('invalid_json'), { code: 'INVALID_JSON' }));
-      }
+      try { resolve(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}')); }
+      catch { reject(new Error('invalid_json')); }
     });
     req.on('error', reject);
   });
 }
 
-function cleanText(value, maxLen) {
-  if (typeof value !== 'string') return '';
-  return value.replace(/[\u0000-\u001F\u007F]/g, ' ').trim().slice(0, maxLen);
+function clean(value, max=200) {
+  return typeof value === 'string' ? value.replace(/[\u0000-\u001F\u007F]/g,' ').trim().slice(0,max) : '';
 }
 
-function buildPrompt({ locality, environment, details }) {
-  return `
-Sos un asistente de identificación visual de plagas para O.FRE.SER, empresa de control de plagas de Salta, Argentina.
+function promptFor({locality, environment, details}) {
+  return `Analizá la imagen como asistente visual de O.FRE.SER, empresa de control de plagas de Salta, Argentina.
 
-Tu tarea es analizar ÚNICAMENTE lo que puede sostenerse por la imagen y el contexto. El universo prioritario son plagas habituales o plausibles de Argentina y especialmente del NOA: cucarachas (incluyendo Blattella germanica, Periplaneta americana y otras), roedores urbanos y de campo, mosquitos (incluyendo Aedes cuando los rasgos visibles alcancen), moscas, hormigas, alacranes, vinchucas/triatominos, arañas, chinches de cama, pulgas, garrapatas, polillas y escarabajos de productos almacenados, avispas y termitas.
+Foco: plagas habituales o plausibles de Argentina y NOA: cucaracha germánica (Blattella germanica), cucaracha americana (Periplaneta americana), otras cucarachas, ratón doméstico, ratas, roedores de campo/Puna, mosquitos/Aedes, moscas, hormigas, alacranes, vinchucas/triatominos, arañas, chinches de cama, pulgas, garrapatas, polillas y escarabajos de productos almacenados, avispas y termitas.
 
-Reglas estrictas:
-1. No inventes una especie. Si sólo podés sostener el grupo, dejá likely_species en null.
-2. Usá status="identified" sólo cuando la imagen sea suficientemente clara para el grupo principal.
-3. Si hay varias posibilidades razonables o la imagen no alcanza, usá status="uncertain", category_key="inconclusive" y confidence="low" o "medium".
-4. Si la imagen no parece una plaga o no contiene un organismo identificable, usá status="not_pest" y category_key="not_pest".
-5. No des instrucciones médicas, dosis, mezclas, concentraciones ni nombres de pesticidas. La web mostrará recomendaciones revisadas por O.FRE.SER después.
-6. No uses la localidad para forzar una identificación contraria a la evidencia visual. El contexto sólo sirve como apoyo.
-7. Para especies sensibles como alacranes, vinchucas, arañas o garrapatas, sé especialmente conservador.
-8. visible_traits debe mencionar rasgos realmente visibles en la foto; no rasgos teóricos que no se vean.
+Reglas:
+- Identificá primero el grupo; especie sólo si la foto muestra rasgos suficientes.
+- Si hay duda real, devolvé status "uncertain" y category_key "inconclusive".
+- Si no es una plaga identificable, status "not_pest" y category_key "not_pest".
+- No inventes especies.
+- No des dosis, pesticidas ni indicaciones médicas.
+- visible_traits debe describir únicamente rasgos visibles en la foto.
+- confidence sólo puede ser high, medium o low.
+- category_key sólo puede ser una de estas: ${[...ALLOWED_KEYS].join(', ')}.
 
-Contexto aportado por el usuario:
-- Localidad: ${locality || 'No indicada'}
-- Ambiente donde apareció: ${environment || 'No indicado'}
-- Detalle adicional: ${details || 'Ninguno'}
+Contexto del usuario:
+Localidad: ${locality || 'No indicada'}
+Ambiente: ${environment || 'No indicado'}
+Detalle: ${details || 'Ninguno'}
 
-Devolvé exclusivamente el JSON que respeta el esquema solicitado.`.trim();
+Respondé EXCLUSIVAMENTE con JSON válido, sin markdown ni comentarios, con esta estructura exacta:
+{
+  "status":"identified|uncertain|not_pest",
+  "category_key":"una clave permitida",
+  "group_name":"nombre común general en español",
+  "likely_species":null,
+  "confidence":"high|medium|low",
+  "visible_traits":["rasgo visible 1"],
+  "alternatives":[{"name":"alternativa","reason":"motivo breve"}],
+  "explanation":"explicación breve y prudente"
+}`;
 }
 
-async function callGemini({ mimeType, imageBase64, locality, environment, details }) {
+function parseModelJson(text) {
+  let cleaned = String(text || '').trim();
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  if (start !== -1 && end > start) cleaned = cleaned.slice(start, end + 1);
+  return JSON.parse(cleaned);
+}
+
+function normalizeResult(value) {
+  const out = value && typeof value === 'object' ? value : {};
+  if (!ALLOWED_KEYS.has(out.category_key)) {
+    out.status = 'uncertain';
+    out.category_key = 'inconclusive';
+    out.confidence = 'low';
+  }
+  if (!['identified','uncertain','not_pest'].includes(out.status)) out.status = 'uncertain';
+  if (!['high','medium','low'].includes(out.confidence)) out.confidence = 'low';
+  out.group_name = clean(out.group_name, 120) || 'No concluyente';
+  out.likely_species = typeof out.likely_species === 'string' ? clean(out.likely_species, 160) : null;
+  out.visible_traits = Array.isArray(out.visible_traits) ? out.visible_traits.slice(0,5).map(v => clean(v,180)).filter(Boolean) : [];
+  out.alternatives = Array.isArray(out.alternatives) ? out.alternatives.slice(0,2).map(a => ({
+    name: clean(a?.name,120), reason: clean(a?.reason,220)
+  })).filter(a => a.name) : [];
+  out.explanation = clean(out.explanation, 700) || 'La identificación es orientativa y puede requerir confirmación.';
+  return out;
+}
+
+async function callGemini({mimeType, imageBase64, locality, environment, details}) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`;
   const body = {
-    contents: [
-      {
-        role: 'user',
-        parts: [
-          {
-            inlineData: {
-              mimeType,
-              data: imageBase64
-            }
-          },
-          {
-            text: buildPrompt({ locality, environment, details })
-          }
-        ]
-      }
-    ],
-    generationConfig: {
-      temperature: 0.1,
-      topP: 0.8,
-      maxOutputTokens: 1200,
-      responseFormat: {
-        text: {
-          mimeType: 'application/json',
-          schema: responseSchema
-        }
-      }
-    }
+    contents:[{role:'user',parts:[
+      {inlineData:{mimeType,data:imageBase64}},
+      {text:promptFor({locality,environment,details})}
+    ]}],
+    generationConfig:{temperature:0.1,topP:0.8,maxOutputTokens:1200}
   };
-
   const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': GEMINI_API_KEY
-    },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(45000)
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-goog-api-key':GEMINI_API_KEY},
+    body:JSON.stringify(body),
+    signal:AbortSignal.timeout(45000)
   });
-
   const raw = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const message = raw?.error?.message || `Gemini HTTP ${response.status}`;
-    const error = new Error(message);
-    error.status = response.status;
-    throw error;
-  }
-
-  const text = raw?.candidates?.[0]?.content?.parts?.find(part => typeof part.text === 'string')?.text;
-  if (!text) throw new Error('Gemini no devolvió texto estructurado.');
-
-  let parsed;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    throw new Error('Gemini devolvió una respuesta que no pudo parsearse como JSON.');
-  }
-
-  if (!allowedCategoryKeys.includes(parsed.category_key)) {
-    parsed.status = 'uncertain';
-    parsed.category_key = 'inconclusive';
-    parsed.confidence = 'low';
-    parsed.explanation = 'La salida del modelo quedó fuera de las categorías permitidas; se marcó como no concluyente.';
-  }
-
-  return parsed;
+  if (!response.ok) throw new Error(raw?.error?.message || `Gemini HTTP ${response.status}`);
+  const text = raw?.candidates?.[0]?.content?.parts?.find(p => typeof p.text === 'string')?.text;
+  if (!text) throw new Error('Gemini no devolvió texto.');
+  return normalizeResult(parseModelJson(text));
 }
 
-const server = http.createServer(async (req, res) => {
+const server = http.createServer(async (req,res) => {
   const origin = req.headers.origin || '';
 
   if (req.method === 'OPTIONS') {
-    if (origin && !ALLOWED_ORIGINS.has(origin)) {
-      return json(res, 403, { error: 'origin_not_allowed' }, origin);
-    }
-    res.writeHead(204, {
-      'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Max-Age': '600',
-      'Vary': 'Origin'
+    if (origin && !ALLOWED_ORIGINS.has(origin)) return sendJson(res,403,{error:'origin_not_allowed'},origin);
+    res.writeHead(204,{
+      'Access-Control-Allow-Origin':origin,
+      'Access-Control-Allow-Methods':'POST, OPTIONS',
+      'Access-Control-Allow-Headers':'Content-Type',
+      'Access-Control-Max-Age':'600',
+      'Vary':'Origin'
     });
     return res.end();
   }
 
   if (req.method === 'GET' && req.url === '/health') {
-    return json(res, 200, {
-      ok: true,
-      service: 'ofreser-pest-ai',
-      model: GEMINI_MODEL,
-      configured: Boolean(GEMINI_API_KEY)
-    }, origin);
+    return sendJson(res,200,{ok:true,service:'ofreser-pest-ai',model:GEMINI_MODEL,configured:Boolean(GEMINI_API_KEY)},origin);
   }
-
-  if (req.method !== 'POST' || req.url !== '/api/identify') {
-    return json(res, 404, { error: 'not_found' }, origin);
-  }
-
-  if (!origin || !ALLOWED_ORIGINS.has(origin)) {
-    return json(res, 403, { error: 'origin_not_allowed' }, origin);
-  }
-
-  if (!GEMINI_API_KEY) {
-    return json(res, 503, {
-      error: 'gemini_not_configured',
-      message: 'El backend está instalado pero falta configurar GEMINI_API_KEY.'
-    }, origin);
-  }
-
-  const ip = getClientIp(req);
-  if (rateLimited(ip)) {
-    return json(res, 429, {
-      error: 'rate_limited',
-      message: 'Se alcanzó el límite temporal de análisis. Intentá nuevamente más tarde.'
-    }, origin);
-  }
+  if (req.method !== 'POST' || req.url !== '/api/identify') return sendJson(res,404,{error:'not_found'},origin);
+  if (!origin || !ALLOWED_ORIGINS.has(origin)) return sendJson(res,403,{error:'origin_not_allowed'},origin);
+  if (!GEMINI_API_KEY) return sendJson(res,503,{error:'gemini_not_configured',message:'Falta GEMINI_API_KEY.'},origin);
+  if (rateLimited(clientIp(req))) return sendJson(res,429,{error:'rate_limited',message:'Límite temporal alcanzado.'},origin);
 
   let payload;
-  try {
-    payload = await readJson(req);
-  } catch (error) {
-    if (error.code === 'PAYLOAD_TOO_LARGE') {
-      return json(res, 413, { error: 'payload_too_large' }, origin);
-    }
-    return json(res, 400, { error: 'invalid_json' }, origin);
-  }
+  try { payload = await readBody(req); }
+  catch (e) { return sendJson(res,e.message==='payload_too_large'?413:400,{error:e.message},origin); }
 
-  const mimeType = cleanText(payload.mimeType, 40).toLowerCase();
+  const mimeType = clean(payload.mimeType,40).toLowerCase();
   const imageBase64 = typeof payload.imageBase64 === 'string' ? payload.imageBase64 : '';
-  const locality = cleanText(payload.locality, 120);
-  const environment = cleanText(payload.environment, 120);
-  const details = cleanText(payload.details, 300);
+  const locality = clean(payload.locality,120);
+  const environment = clean(payload.environment,120);
+  const details = clean(payload.details,300);
 
-  if (!allowedMimeTypes.has(mimeType)) {
-    return json(res, 400, { error: 'unsupported_image_type' }, origin);
-  }
-  if (!imageBase64 || imageBase64.length > 5_500_000 || !/^[A-Za-z0-9+/=]+$/.test(imageBase64)) {
-    return json(res, 400, { error: 'invalid_image' }, origin);
-  }
+  if (!ALLOWED_MIME.has(mimeType)) return sendJson(res,400,{error:'unsupported_image_type'},origin);
+  if (!imageBase64 || imageBase64.length > 5500000 || !/^[A-Za-z0-9+/=]+$/.test(imageBase64)) return sendJson(res,400,{error:'invalid_image'},origin);
 
   try {
-    const result = await callGemini({ mimeType, imageBase64, locality, environment, details });
-    return json(res, 200, { ok: true, result }, origin);
+    const result = await callGemini({mimeType,imageBase64,locality,environment,details});
+    return sendJson(res,200,{ok:true,result},origin);
   } catch (error) {
     console.error('Gemini identify error:', error?.message || error);
-    return json(res, 502, {
-      error: 'gemini_failed',
-      message: 'No se pudo completar el análisis con Gemini en este momento.'
-    }, origin);
+    return sendJson(res,502,{error:'gemini_failed',message:'No se pudo completar el análisis con Gemini en este momento.'},origin);
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT,'0.0.0.0',() => {
   console.log(`O.FRE.SER pest AI backend listening on ${PORT} with model ${GEMINI_MODEL}`);
 });
