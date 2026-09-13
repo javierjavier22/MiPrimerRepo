@@ -1,12 +1,17 @@
 /*
   O.FRE.SER — Backend Gemini para identificación orientativa de plagas.
-  La API key vive sólo en Render. La respuesta de Gemini se valida antes de enviarse al navegador.
+  La API key vive sólo en Render. La respuesta se valida antes de enviarse al navegador.
 */
 const http = require('node:http');
 
 const PORT = Number(process.env.PORT || 10000);
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const FALLBACK_MODELS = [...new Set([
+  GEMINI_MODEL,
+  'gemini-3.7-flash',
+  'gemini-3.5-flash-lite'
+])];
 const ALLOWED_ORIGINS = new Set((process.env.ALLOWED_ORIGINS ||
   'https://ofreser-v8-imagefix-demo.onrender.com,https://www.ofreser.com.ar,https://ofreser.com.ar,http://localhost:3000,http://127.0.0.1:3000')
   .split(',').map(v => v.trim()).filter(Boolean));
@@ -79,6 +84,10 @@ function clean(value, max=200) {
   return typeof value === 'string' ? value.replace(/[\u0000-\u001F\u007F]/g,' ').trim().slice(0,max) : '';
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function promptFor({locality, environment, details}) {
   return `Analizá la imagen como asistente visual de O.FRE.SER, empresa de control de plagas de Salta, Argentina.
 
@@ -140,15 +149,20 @@ function normalizeResult(value) {
   return out;
 }
 
-async function callGemini({mimeType, imageBase64, locality, environment, details}) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`;
+function isRetryableStatus(status) {
+  return status === 429 || status === 500 || status === 502 || status === 503 || status === 504;
+}
+
+async function callGeminiModel(model, payload) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
   const body = {
     contents:[{role:'user',parts:[
-      {inlineData:{mimeType,data:imageBase64}},
-      {text:promptFor({locality,environment,details})}
+      {inlineData:{mimeType:payload.mimeType,data:payload.imageBase64}},
+      {text:promptFor(payload)}
     ]}],
     generationConfig:{temperature:0.1,topP:0.8,maxOutputTokens:1200}
   };
+
   const response = await fetch(url, {
     method:'POST',
     headers:{'Content-Type':'application/json','x-goog-api-key':GEMINI_API_KEY},
@@ -156,10 +170,54 @@ async function callGemini({mimeType, imageBase64, locality, environment, details
     signal:AbortSignal.timeout(45000)
   });
   const raw = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(raw?.error?.message || `Gemini HTTP ${response.status}`);
+
+  if (!response.ok) {
+    const error = new Error(raw?.error?.message || `Gemini HTTP ${response.status}`);
+    error.status = response.status;
+    error.model = model;
+    throw error;
+  }
+
   const text = raw?.candidates?.[0]?.content?.parts?.find(p => typeof p.text === 'string')?.text;
-  if (!text) throw new Error('Gemini no devolvió texto.');
+  if (!text) {
+    const error = new Error('Gemini no devolvió texto.');
+    error.status = 502;
+    error.model = model;
+    throw error;
+  }
+
   return normalizeResult(parseModelJson(text));
+}
+
+async function callGemini(payload) {
+  let lastError = null;
+
+  for (let i = 0; i < FALLBACK_MODELS.length; i++) {
+    const model = FALLBACK_MODELS[i];
+    const attempts = i === 0 ? 2 : 1;
+
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      try {
+        if (i > 0 || attempt > 1) {
+          console.log(`Gemini retry/fallback: model=${model} attempt=${attempt}`);
+        }
+        return await callGeminiModel(model, payload);
+      } catch (error) {
+        lastError = error;
+        console.error(`Gemini model error [${model}] attempt ${attempt}:`, error?.message || error);
+
+        if (!isRetryableStatus(error?.status)) throw error;
+
+        if (attempt < attempts) {
+          await sleep(attempt === 1 ? 900 : 1800);
+        }
+      }
+    }
+  }
+
+  const finalError = lastError || new Error('Gemini no disponible');
+  finalError.allModelsBusy = true;
+  throw finalError;
 }
 
 const server = http.createServer(async (req,res) => {
@@ -178,7 +236,7 @@ const server = http.createServer(async (req,res) => {
   }
 
   if (req.method === 'GET' && req.url === '/health') {
-    return sendJson(res,200,{ok:true,service:'ofreser-pest-ai',model:GEMINI_MODEL,configured:Boolean(GEMINI_API_KEY)},origin);
+    return sendJson(res,200,{ok:true,service:'ofreser-pest-ai',models:FALLBACK_MODELS,configured:Boolean(GEMINI_API_KEY)},origin);
   }
   if (req.method !== 'POST' || req.url !== '/api/identify') return sendJson(res,404,{error:'not_found'},origin);
   if (!origin || !ALLOWED_ORIGINS.has(origin)) return sendJson(res,403,{error:'origin_not_allowed'},origin);
@@ -202,11 +260,17 @@ const server = http.createServer(async (req,res) => {
     const result = await callGemini({mimeType,imageBase64,locality,environment,details});
     return sendJson(res,200,{ok:true,result},origin);
   } catch (error) {
-    console.error('Gemini identify error:', error?.message || error);
+    console.error('Gemini identify final error:', error?.message || error);
+    if (error?.allModelsBusy || isRetryableStatus(error?.status)) {
+      return sendJson(res,503,{
+        error:'gemini_busy',
+        message:'Gemini está temporalmente saturado. El sistema ya reintentó y probó modelos alternativos. Intentá nuevamente en unos segundos.'
+      },origin);
+    }
     return sendJson(res,502,{error:'gemini_failed',message:'No se pudo completar el análisis con Gemini en este momento.'},origin);
   }
 });
 
 server.listen(PORT,'0.0.0.0',() => {
-  console.log(`O.FRE.SER pest AI backend listening on ${PORT} with model ${GEMINI_MODEL}`);
+  console.log(`O.FRE.SER pest AI backend listening on ${PORT} with models ${FALLBACK_MODELS.join(' -> ')}`);
 });
