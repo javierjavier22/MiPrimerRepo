@@ -18,7 +18,7 @@
 <nav class="mobile-nav" aria-label="Navegación móvil"><a class="btn btn-primary" href="contacto.html">Solicitar propuesta</a></nav>
 
 <main id="contenido">
-<section class="id-hero"><div class="container"><span class="beta-pill">IA experimental · Beta</span><h1>¿Qué plaga es?</h1><p class="lead">Subí una foto y el navegador comparará visualmente el ejemplar contra grupos de plagas relevantes para Argentina y el NOA. El resultado es orientativo: si la imagen no separa bien las opciones, la herramienta debe decir “no concluyente”.</p></div></section>
+<section class="id-hero"><div class="container"><span class="beta-pill">Gemini Vision · Beta</span><h1>¿Qué plaga es?</h1><p class="lead">Subí una foto y una IA multimodal analizará los rasgos visibles con foco en plagas relevantes de Argentina y el NOA. El resultado es orientativo: si la imagen no alcanza, la herramienta debe decir “no concluyente”.</p></div></section>
 
 <section class="section"><div class="container">
 <div class="id-layout">
@@ -37,32 +37,32 @@
       <div class="id-field full"><label for="detalle">Algo más que ayude</label><input id="detalle" type="text" placeholder="Ej. apareció de noche, cerca de un desagüe, había varios..."/></div>
     </div>
 
-    <div class="id-actions"><button class="btn btn-primary" id="analyzeBtn" disabled>Analizar foto</button><button class="btn btn-outline" id="resetBtn" type="button">Limpiar</button></div>
-    <p class="privacy-note">La foto se analiza en tu propio navegador: no se publica ni se guarda en O.FRE.SER. La primera ejecución necesita descargar el modelo; después el navegador puede reutilizarlo desde caché.</p>
-    <div class="model-note"><strong>Fase de validación.</strong> El motor ya clasifica imágenes de verdad, pero todavía usamos un modelo generalista y no uno entrenado específicamente con plagas argentinas. Por eso esta página sigue siendo beta y no está indexada.</div>
+    <div class="id-actions"><button class="btn btn-primary" id="analyzeBtn" disabled>Analizar foto con IA</button><button class="btn btn-outline" id="resetBtn" type="button">Limpiar</button></div>
+    <p class="privacy-note">La foto se envía al backend de O.FRE.SER únicamente para realizar este análisis con Gemini. La clave de la API nunca se expone en el navegador. Esta versión beta no almacena la imagen en la aplicación.</p>
+    <div class="model-note"><strong>Fase de validación.</strong> Dejamos de usar el clasificador TinyCLIP porque falló pruebas básicas. Esta versión usa Gemini Vision y será evaluada con fotos conocidas de plagas de Argentina/NOA antes de considerarla definitiva.</div>
 
     <div class="result-panel" id="resultPanel"><div class="result-head"><span>Resultado experimental</span><h3>Esperando una foto</h3></div><div class="result-body"><p>El resultado aparecerá aquí.</p></div></div>
   </div>
 
   <div class="side-stack">
     <div class="info-box"><span class="eyebrow">Enfoque Argentina / NOA</span><h3 style="margin-top:9px">Primero reconocemos lo que realmente aparece acá.</h3><p>No intentamos clasificar toda la biodiversidad mundial. La prueba se concentra en grupos relevantes para viviendas, comercios, industria, alimentos y operaciones del norte argentino.</p><div class="taxa"><span>Cucarachas</span><span>Mosquitos / Aedes</span><span>Alacranes</span><span>Vinchucas</span><span>Hormigas</span><span>Moscas</span><span>Arañas</span><span>Chinches de cama</span><span>Pulgas</span><span>Garrapatas</span><span>Polillas</span><span>Gorgojos</span><span>Avispas</span><span>Termitas</span><span>Roedores</span><span>No concluyente</span></div></div>
-    <div class="info-box"><h3>¿Qué información mejora el resultado?</h3><p>La foto manda. La localidad, el ambiente, el tamaño aproximado y si había uno o varios ejemplares ayudan después a interpretar si el resultado tiene sentido para ese contexto.</p></div>
+    <div class="info-box"><h3>¿Qué información mejora el resultado?</h3><p>La foto manda. La localidad, el ambiente, el tamaño aproximado y si había uno o varios ejemplares ayudan a interpretar si una identificación tiene sentido para ese contexto.</p></div>
     <div class="info-box safety"><strong>Importante</strong><h3 style="margin-top:7px">No reemplaza una identificación profesional ni atención médica.</h3><p>En especies de importancia sanitaria se prioriza la seguridad. Una sospecha de alacrán, vinchuca, araña u otra especie sensible siempre debe considerarse orientativa hasta ser confirmada.</p></div>
   </div>
 </div>
 
 <div class="steps">
   <div class="step"><b>01</b><h3>Imagen</h3><p>El usuario elige una foto existente desde el celular o la computadora.</p></div>
-  <div class="step"><b>02</b><h3>Comparación visual</h3><p>Un modelo ejecutado en el navegador compara la imagen con categorías previamente definidas.</p></div>
-  <div class="step"><b>03</b><h3>Resultado útil</h3><p>Coincidencias probables, prevención, salida “no concluyente” y contacto con O.FRE.SER.</p></div>
+  <div class="step"><b>02</b><h3>Análisis multimodal</h3><p>El backend envía la foto y el contexto a Gemini sin exponer la clave de API al usuario.</p></div>
+  <div class="step"><b>03</b><h3>Resultado útil</h3><p>Grupo probable, especie sólo si hay evidencia, prevención revisada, salida “no concluyente” y contacto con O.FRE.SER.</p></div>
 </div>
-<div class="id-footnote">Esta versión sirve para medir si la idea tiene valor real. Antes de incorporarla a la web definitiva debemos probarla con un lote separado de fotos conocidas de plagas de Argentina/NOA y medir aciertos, errores y falsos positivos sensibles.</div>
+<div class="id-footnote">Esta versión sirve para medir precisión real. Antes de incorporarla a la web definitiva debemos probarla con un lote separado de fotos conocidas de plagas de Argentina/NOA y registrar aciertos, errores y falsos positivos sensibles.</div>
 </div></section>
 </main>
 
-<footer class="footer"><div class="container"><div class="footer-grid"><div><img alt="O.FRE.SER" class="footer-logo" src="assets/img/logo-ofreser.webp" width="900" height="680"/><p>Gestión Integral de Plagas para minería, industrias, empresas, comercios y hogares. Prevención, monitoreo, control y trazabilidad.</p></div><div><h4>Sectores</h4><a href="mineria.html">Minería</a><a href="industria.html">Industria</a><a href="hogares.html">Hogares y comercios</a></div><div><h4>Información</h4><a href="aprende.html">Aprendé sobre plagas</a><a href="identificador.html">¿Qué plaga es?</a><a href="nosotros.html">Quiénes somos</a></div><div><h4>Contacto</h4><span>Gral. Güemes 1340 · Salta</span><a href="tel:+543874212368">387 421-2368</a><a href="https://wa.me/5493875286093">+54 9 387 528-6093</a></div></div><div class="footer-bottom"><span>© 2026 O.FRE.SER · Grupo Morón</span><span>Identificador experimental · noindex</span></div></div></footer>
+<footer class="footer"><div class="container"><div class="footer-grid"><div><img alt="O.FRE.SER" class="footer-logo" src="assets/img/logo-ofreser.webp" width="900" height="680"/><p>Gestión Integral de Plagas para minería, industrias, empresas, comercios y hogares. Prevención, monitoreo, control y trazabilidad.</p></div><div><h4>Sectores</h4><a href="mineria.html">Minería</a><a href="industria.html">Industria</a><a href="hogares.html">Hogares y comercios</a></div><div><h4>Información</h4><a href="aprende.html">Aprendé sobre plagas</a><a href="identificador.html">¿Qué plaga es?</a><a href="nosotros.html">Quiénes somos</a></div><div><h4>Contacto</h4><span>Gral. Güemes 1340 · Salta</span><a href="tel:+543874212368">387 421-2368</a><a href="https://wa.me/5493875286093">+54 9 387 528-6093</a></div></div><div class="footer-bottom"><span>© 2026 O.FRE.SER · Grupo Morón</span><span>Identificador Gemini experimental · noindex</span></div></div></footer>
 <a aria-label="Contactar por WhatsApp" class="wa" href="https://wa.me/5493875286093" rel="noopener noreferrer" target="_blank"></a>
 <script defer src="assets/app.js"></script>
-<script type="module" src="assets/identificador-ai.js"></script>
+<script src="assets/identificador-ai.js" defer></script>
 </body>
 </html>
