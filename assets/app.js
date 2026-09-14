@@ -5,7 +5,7 @@
   core.src='assets/app-core.js?v=20260914a';
   core.onload=()=>{
     const upgrades=document.createElement('script');
-    upgrades.src='assets/home-upgrades.js?v=20260914a';
+    upgrades.src='assets/home-upgrades.js?v=20260914b';
     document.head.appendChild(upgrades);
   };
   document.head.appendChild(core);
